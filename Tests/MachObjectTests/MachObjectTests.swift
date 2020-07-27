@@ -15,7 +15,7 @@ final class MachObjectTests: XCTestCase {
                 return nil
             }
                     .first
-            print("\(arm64Mach?.loadCommands)")
+            print("\(String(describing: arm64Mach?.loadCommands))")
         case .mach(let mach):
             print("\(mach.loadCommands)")
         }
