@@ -9,15 +9,8 @@ import MachO
 public struct Image {
     let url: URL
     var content: Content
-}
 
-// MARK: - Initialize
-public extension Image {
-    static func load(url: URL) throws -> Image {
-        try Image(url: url)
-    }
-
-    init(url: URL) throws {
+    public init(url: URL) throws {
         self.url = url
         let data = try Data(contentsOf: url, options: .mappedIfSafe)
         let magic = data.magic
@@ -29,5 +22,12 @@ public extension Image {
         default:
             throw Error.unsupported(url: url, magic: magic)
         }
+    }
+}
+
+// MARK: - Initialize
+public extension Image {
+    static func load(url: URL) throws -> Image {
+        try Image(url: url)
     }
 }

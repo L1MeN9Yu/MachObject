@@ -42,7 +42,7 @@ private extension Mach {
     static func parseLoadCommand(data: Data, count: UInt32, headerSize: Int) -> [LoadCommand] {
         var loadCommands = [LoadCommand]()
         var cmdsLeft = count
-        var cursor = MemoryLayout<mach_header>.size
+        var cursor = headerSize
         while cmdsLeft > 0 {
             let command: load_command = data.get(atOffset: cursor)
             switch command.cmd {
@@ -67,11 +67,15 @@ private extension Mach {
                 let fixedVMFileLC = FixedVMFileLC(machData: data, offset: cursor)
                 loadCommands.append(fixedVMFileLC)
             case UInt32(LC_PREPAGE):/* prepage command (internal use) */break
-            case UInt32(LC_DYSYMTAB):
+            case DynamicSymbolTableLC.id:
                 let dynamicSymbolTableLC = DynamicSymbolTableLC(machData: data, offset: cursor)
                 loadCommands.append(dynamicSymbolTableLC)
-            case UInt32(LC_LOAD_DYLIB):break
-            case UInt32(LC_ID_DYLIB):break
+            case LoadDylibLC.id:
+                let loadDylibLC = LoadDylibLC(machData: data, offset: cursor)
+                loadCommands.append(loadDylibLC)
+            case IDDylibLC.id:
+                let idDylibLC = IDDylibLC(machData: data, offset: cursor)
+                loadCommands.append(idDylibLC)
             case UInt32(LC_LOAD_DYLINKER):break
             case UInt32(LC_ID_DYLINKER):break
             case UInt32(LC_PREBOUND_DYLIB):break
@@ -82,14 +86,18 @@ private extension Mach {
             case UInt32(LC_SUB_LIBRARY):break
             case UInt32(LC_TWOLEVEL_HINTS):break
             case UInt32(LC_PREBIND_CKSUM):break
-            case UInt32(LC_LOAD_WEAK_DYLIB):break
+            case LoadWeakDylibLC.id:
+                let loadWeakDylibLC = LoadWeakDylibLC(machData: data, offset: cursor)
+                loadCommands.append(loadWeakDylibLC)
             case UInt32(LC_SEGMENT_64):break
             case UInt32(LC_ROUTINES_64):break
             case UInt32(LC_UUID):break
             case UInt32(LC_RPATH):break
             case UInt32(LC_CODE_SIGNATURE):break
             case UInt32(LC_SEGMENT_SPLIT_INFO):break
-            case UInt32(LC_REEXPORT_DYLIB):break
+            case ReexportedDylibLC.id:
+                let reexportedDylibLC = ReexportedDylibLC(machData: data, offset: cursor)
+                loadCommands.append(reexportedDylibLC)
             case UInt32(LC_LAZY_LOAD_DYLIB):break
             case UInt32(LC_ENCRYPTION_INFO):break
             case UInt32(LC_DYLD_INFO):break
@@ -124,4 +132,5 @@ private extension Mach {
 // MARK: - Readable Property
 public extension Mach {
     var fileType: FileType { FileType(fileType: header.fileType) }
+    var cupType: CPUType { CPUType(cpuType: header.cupType) }
 }

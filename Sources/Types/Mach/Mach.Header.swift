@@ -17,5 +17,14 @@ extension Mach {
                 return header.fileType
             }
         }
+
+        var cupType: cpu_type_t {
+            switch self {
+            case ._32(let header):
+                return header.cpuType
+            case ._64(let header):
+                return header.cpuType
+            }
+        }
     }
 }

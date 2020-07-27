@@ -14,7 +14,7 @@ public struct FixedVMFileLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let fvmfile: fvmfile_command = machData.get(atOffset: offset)
-        name = String(data: machData, offset: offset, commandSize: MemoryLayout<fvmfile_command>.size, loadCommandString: fvmfile.name)
+        name = String(data: machData, offset: offset, commandSize: Int(fvmfile.cmdsize), loadCommandString: fvmfile.name)
         headerAddress = fvmfile.header_addr
     }
 }
