@@ -8,5 +8,4 @@ precedencegroup Forward {
 
 infix operator |>: Forward
 
-func |><T, U>(value: T, function: (T) -> U) -> U { function(value) }
-
+func |> <T, U>(value: T, function: (T) -> U) -> U { function(value) }

@@ -11,8 +11,8 @@ extension UnsafeRawPointer {
 
     func get<T>(count: Int) -> [T] {
         bindMemory(to: T.self, capacity: count)
-                |> { t in UnsafeBufferPointer<T>(start: t, count: count) }
-                |> [T].init
+            |> { t in UnsafeBufferPointer<T>(start: t, count: count) }
+            |> [T].init
     }
 }
 

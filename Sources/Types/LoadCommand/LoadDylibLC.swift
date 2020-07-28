@@ -22,4 +22,3 @@ public struct LoadDylibLC: LoadCommand {
         compatibilityVersion = Version(machVersion: dylib.compatibility_version)
     }
 }
-

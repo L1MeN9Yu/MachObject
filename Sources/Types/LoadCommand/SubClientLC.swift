@@ -12,6 +12,9 @@ public struct SubClientLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: sub_client_command = machData.get(atOffset: offset)
-        client = String(data: machData, offset: offset, commandSize: Int(command.cmdsize), loadCommandString: command.client)
+        client = String(
+            data: machData, offset: offset,
+            commandSize: Int(command.cmdsize), loadCommandString: command.client
+        )
     }
 }

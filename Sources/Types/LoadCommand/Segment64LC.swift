@@ -31,7 +31,9 @@ public struct Segment64LC: LoadCommand {
         initProtection = command.initprot
         sectionCount = command.nsects
         flags = command.flags
-        let sections: [section_64] = machData.get(atOffset: offset + MemoryLayout<segment_command_64>.size, count: Int(command.nsects))
+        let sections: [section_64] = machData.get(
+            atOffset: offset + MemoryLayout<segment_command_64>.size, count: Int(command.nsects)
+        )
         sectionHeaders = sections.map { section -> SectionHeader64 in SectionHeader64(section: section) }
     }
 }

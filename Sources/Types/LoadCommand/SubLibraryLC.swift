@@ -7,10 +7,13 @@ import MachO
 
 public struct SubLibraryLC: LoadCommand {
     public static let id: UInt32 = UInt32(LC_SUB_LIBRARY)
-    public let sub_library: String
+    public let subLibrary: String
 
     public init(machData: Data, offset: Int) {
         let command: sub_library_command = machData.get(atOffset: offset)
-        sub_library = String(data: machData, offset: offset, commandSize: Int(command.cmdsize), loadCommandString: command.sub_library)
+        subLibrary = String(
+            data: machData, offset: offset,
+            commandSize: Int(command.cmdsize), loadCommandString: command.sub_library
+        )
     }
 }

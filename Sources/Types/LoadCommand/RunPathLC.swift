@@ -12,6 +12,9 @@ public struct RunPathLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: rpath_command = machData.get(atOffset: offset)
-        path = String(data: machData, offset: offset, commandSize: Int(command.cmdsize), loadCommandString: command.path)
+        path = String(
+            data: machData, offset: offset,
+            commandSize: Int(command.cmdsize), loadCommandString: command.path
+        )
     }
 }

@@ -6,6 +6,7 @@ import Foundation
 import MachO
 
 // MARK: - Define
+
 public struct Mach {
     var data: Data
     public let header: Header
@@ -26,19 +27,24 @@ public struct Mach {
 
 private extension Mach {
     init(data32: Data) {
-        self.data = data32
+        data = data32
         let header: mach_header = data32.get(atOffset: 0)
         self.header = ._32(MachHeader32(header: header))
-        loadCommands = Self.parseLoadCommand(data: data32, count: header.ncmds, headerSize: MemoryLayout<mach_header>.size)
+        loadCommands = Self.parseLoadCommand(
+            data: data32, count: header.ncmds, headerSize: MemoryLayout<mach_header>.size
+        )
     }
 
     init(data64: Data) {
-        self.data = data64
+        data = data64
         let header: mach_header_64 = data64.get(atOffset: 0)
         self.header = ._64(MachHeader64(header: header))
-        loadCommands = Self.parseLoadCommand(data: data64, count: header.ncmds, headerSize: MemoryLayout<mach_header_64>.size)
+        loadCommands = Self.parseLoadCommand(
+            data: data64, count: header.ncmds, headerSize: MemoryLayout<mach_header_64>.size
+        )
     }
 
+    // swiftlint:disable function_body_length
     static func parseLoadCommand(data: Data, count: UInt32, headerSize: Int) -> [LoadCommand] {
         var loadCommands = [LoadCommand]()
         var cmdsLeft = count
@@ -46,27 +52,27 @@ private extension Mach {
         while cmdsLeft > 0 {
             let command: load_command = data.get(atOffset: cursor)
             switch command.cmd {
-            case UInt32(LC_REQ_DYLD):/* do not handle this */break
+            case UInt32(LC_REQ_DYLD): /* do not handle this */ break
             case SegmentLC.id:
                 let segmentLC = SegmentLC(machData: data, offset: cursor)
                 loadCommands.append(segmentLC)
             case SymbolTableLC.id:
                 let symbolTableLC = SymbolTableLC(machData: data, offset: cursor)
                 loadCommands.append(symbolTableLC)
-            case UInt32(LC_SYMSEG):/* OBSOLETE */break
+            case UInt32(LC_SYMSEG): /* OBSOLETE */ break
             case ThreadLC.id:
                 let threadLC = ThreadLC(machData: data, offset: cursor)
                 loadCommands.append(threadLC)
             case UnixThreadLC.id:
                 let unixThreadLC = UnixThreadLC(machData: data, offset: cursor)
                 loadCommands.append(unixThreadLC)
-            case UInt32(LC_LOADFVMLIB):/* OBSOLETE */break
-            case UInt32(LC_IDFVMLIB):/* OBSOLETE */break
-            case UInt32(LC_IDENT):/* OBSOLETE */break
+            case UInt32(LC_LOADFVMLIB): /* OBSOLETE */ break
+            case UInt32(LC_IDFVMLIB): /* OBSOLETE */ break
+            case UInt32(LC_IDENT): /* OBSOLETE */ break
             case FixedVMFileLC.id:
                 let fixedVMFileLC = FixedVMFileLC(machData: data, offset: cursor)
                 loadCommands.append(fixedVMFileLC)
-            case UInt32(LC_PREPAGE):/* prepage command (internal use) */break
+            case UInt32(LC_PREPAGE): /* prepage command (internal use) */ break
             case DynamicSymbolTableLC.id:
                 let dynamicSymbolTableLC = DynamicSymbolTableLC(machData: data, offset: cursor)
                 loadCommands.append(dynamicSymbolTableLC)
@@ -82,7 +88,7 @@ private extension Mach {
             case IDDylinkerLC.id:
                 let idDylinkerLC = IDDylinkerLC(machData: data, offset: cursor)
                 loadCommands.append(idDylinkerLC)
-            case UInt32(LC_PREBOUND_DYLIB):/* todo not handle */break
+            case UInt32(LC_PREBOUND_DYLIB): /* todo not handle */ break
             case RoutinesLC.id:
                 let routinesLC = RoutinesLC(machData: data, offset: cursor)
                 loadCommands.append(routinesLC)
@@ -161,26 +167,40 @@ private extension Mach {
             case DataInCodeLC.id:
                 let dataInCodeLC = DataInCodeLC(machData: data, offset: cursor)
                 loadCommands.append(dataInCodeLC)
-            case UInt32(LC_SOURCE_VERSION):break
+            case SourceVersionLC.id:
+                let sourceVersionLC = SourceVersionLC(machData: data, offset: cursor)
+                loadCommands.append(sourceVersionLC)
             case DylibCodeSignDrsLC.id:
                 let dylibCodeSignDrsLC = DylibCodeSignDrsLC(machData: data, offset: cursor)
                 loadCommands.append(dylibCodeSignDrsLC)
             case EncryptionInfo64LC.id:
                 let encryptionInfo64LC = EncryptionInfo64LC(machData: data, offset: cursor)
                 loadCommands.append(encryptionInfo64LC)
-            case UInt32(LC_LINKER_OPTION):break
-            case UInt32(LC_LINKER_OPTIMIZATION_HINT):break
+            case LinkerOptionLC.id:
+                let linkerOptionLC = LinkerOptionLC(machData: data, offset: cursor)
+                loadCommands.append(linkerOptionLC)
+            case LinkerOptimizationHintLC.id:
+                let linkerOptimizationHintLC = LinkerOptimizationHintLC(machData: data, offset: cursor)
+                loadCommands.append(linkerOptimizationHintLC)
             case VersionMinTvosLC.id:
                 let versionMinTvosLC = VersionMinTvosLC(machData: data, offset: cursor)
                 loadCommands.append(versionMinTvosLC)
             case VersionMinWatchosLC.id:
                 let versionMinWatchosLC = VersionMinWatchosLC(machData: data, offset: cursor)
                 loadCommands.append(versionMinWatchosLC)
-            case UInt32(LC_NOTE):break
-            case UInt32(LC_BUILD_VERSION):break
-            case UInt32(LC_DYLD_EXPORTS_TRIE):break
-            case UInt32(LC_DYLD_CHAINED_FIXUPS):break
-            default:break
+            case NoteLC.id:
+                let noteLC = NoteLC(machData: data, offset: cursor)
+                loadCommands.append(noteLC)
+            case BuildVersionLC.id:
+                let buildVersionLC = BuildVersionLC(machData: data, offset: cursor)
+                loadCommands.append(buildVersionLC)
+            case DyldExportsTrieLC.id:
+                let dyldExportsTrieLC = DyldExportsTrieLC(machData: data, offset: cursor)
+                loadCommands.append(dyldExportsTrieLC)
+            case DyldChainedFixupsLC.id:
+                let dyldChainedFixupsLC = DyldChainedFixupsLC(machData: data, offset: cursor)
+                loadCommands.append(dyldChainedFixupsLC)
+            default: break
             }
             cursor += Int(command.cmdsize)
             cmdsLeft -= 1
@@ -190,6 +210,7 @@ private extension Mach {
 }
 
 // MARK: - Readable Property
+
 public extension Mach {
     var fileType: FileType { FileType(fileType: header.fileType) }
     var cupType: CPUType { CPUType(cpuType: header.cupType) }

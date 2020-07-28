@@ -1,5 +1,5 @@
-import XCTest
 @testable import MachObject
+import XCTest
 
 final class MachObjectTests: XCTestCase {
     func testExample() throws {
@@ -9,14 +9,14 @@ final class MachObjectTests: XCTestCase {
         let path = "/Users/limengyu/Desktop/Lagrange_Dynamic"
         let image = try Image(url: URL(fileURLWithPath: path))
         switch image.content {
-        case .fat(let fat):
+        case let .fat(fat):
             let arm64Mach = fat.architectures.compactMap { architecture -> Mach? in
                 if architecture.mach.cupType == .arm64 { return architecture.mach }
                 return nil
             }
-                    .first
+            .first
             print("\(String(describing: arm64Mach?.loadCommands))")
-        case .mach(let mach):
+        case let .mach(mach):
             print("\(mach.loadCommands)")
         }
     }

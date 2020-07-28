@@ -30,6 +30,8 @@ extension String {
         let loadCommandStringOffset = Int(loadCommandString.offset)
         let stringOffset = offset + loadCommandStringOffset
         let length = commandSize - loadCommandStringOffset
-        self = String(data: data[stringOffset..<(stringOffset + length)], encoding: .utf8)?.trimmingCharacters(in: .controlCharacters) ?? "Get String Error"
+        self = String(data: data[stringOffset..<(stringOffset + length)], encoding: .utf8)?
+            .trimmingCharacters(in: .controlCharacters)
+            ?? "Get String Error"
     }
 }

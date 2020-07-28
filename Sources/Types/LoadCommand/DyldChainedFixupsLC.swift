@@ -1,12 +1,12 @@
 //
-// Created by Mengyu Li on 2020/7/27.
+// Created by Mengyu Li on 2020/7/28.
 //
 
 import Foundation
 import MachO
 
-public struct DataInCodeLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_DATA_IN_CODE)
+public struct DyldChainedFixupsLC: LoadCommand {
+    public static let id: UInt32 = LC_DYLD_CHAINED_FIXUPS
 
     public let dataOffset: UInt32
     public let dataSize: UInt32

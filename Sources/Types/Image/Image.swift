@@ -6,6 +6,7 @@ import Foundation
 import MachO
 
 // MARK: - Define
+
 public struct Image {
     let url: URL
     var content: Content
@@ -26,6 +27,7 @@ public struct Image {
 }
 
 // MARK: - Initialize
+
 public extension Image {
     static func load(url: URL) throws -> Image {
         try Image(url: url)

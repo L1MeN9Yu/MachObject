@@ -11,18 +11,18 @@ extension Mach {
 
         var fileType: UInt32 {
             switch self {
-            case ._32(let header):
+            case let ._32(header):
                 return header.fileType
-            case ._64(let header):
+            case let ._64(header):
                 return header.fileType
             }
         }
 
         var cupType: cpu_type_t {
             switch self {
-            case ._32(let header):
+            case let ._32(header):
                 return header.cpuType
-            case ._64(let header):
+            case let ._64(header):
                 return header.cpuType
             }
         }
