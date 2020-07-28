@@ -1,0 +1,9 @@
+--indent 2
+--indentcase false
+--trimwhitespace always
+--empty tuple
+--nospaceoperators ..<,...
+--ifdef noindent
+--stripunusedargs closure-only
+--disable andOperator
+--swiftversion 5.2
