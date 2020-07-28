@@ -6,11 +6,11 @@ import Foundation
 import MachO
 
 public struct UnixThreadLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_UNIXTHREAD)
+	public static let id: UInt32 = UInt32(LC_UNIXTHREAD)
 
-    private let thread: thread_command
+	private let thread: thread_command
 
-    public init(machData: Data, offset: Int) {
-        thread = machData.get(atOffset: offset)
-    }
+	public init(machData: Data, offset: Int) {
+		thread = machData.get(atOffset: offset)
+	}
 }

@@ -3,7 +3,7 @@
 //
 
 precedencegroup Forward {
-    associativity: left
+	associativity: left
 }
 
 infix operator |>: Forward

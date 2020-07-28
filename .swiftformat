@@ -1,4 +1,5 @@
---indent 4
+--indent tab
+--tabwidth 4
 --indentcase false
 --trimwhitespace always
 --empty tuple

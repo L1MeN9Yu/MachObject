@@ -5,7 +5,7 @@
 import Foundation
 
 extension Mach {
-    public enum Error: Swift.Error {
-        case magic(UInt32?)
-    }
+	public enum Error: Swift.Error {
+		case magic(UInt32?)
+	}
 }

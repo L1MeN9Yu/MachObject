@@ -5,7 +5,7 @@
 import Foundation
 
 extension Image {
-    enum Error: Swift.Error {
-        case unsupported(url: URL, magic: UInt32?)
-    }
+	enum Error: Swift.Error {
+		case unsupported(url: URL, magic: UInt32?)
+	}
 }
