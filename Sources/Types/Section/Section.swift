@@ -5,17 +5,23 @@
 import Foundation
 import MachO
 
-public struct Section: Equatable {
-	var name: String
-	var range: Range<UInt64>
+public struct Section {
+	public let name: String
+	public let segmentName: String
+	public let range: Range<UInt64>
+	public let content: Content
 
-	init(_ section: section_64) {
-		name = section.name
-		range = Range(offset: UInt64(section.offset), count: section.size)
+	init(sectionHeader: SectionHeader, machoData: Data) {
+		name = sectionHeader.sectionName
+		range = Range(offset: UInt64(sectionHeader.offset), count: UInt64(sectionHeader.size))
+		segmentName = sectionHeader.segmentName
+		content = Content(segmentName: segmentName, name: name, machoData: machoData, range: range)
 	}
 
-	init(_ section: section) {
-		name = section.name
-		range = Range(offset: UInt64(section.offset), count: UInt64(section.size))
+	init(sectionHeader: SectionHeader64, machoData: Data) {
+		name = sectionHeader.sectionName
+		range = Range(offset: UInt64(sectionHeader.offset), count: sectionHeader.size)
+		segmentName = sectionHeader.segmentName
+		content = Content(segmentName: segmentName, name: name, machoData: machoData, range: range)
 	}
 }

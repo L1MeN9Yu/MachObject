@@ -10,12 +10,14 @@ final class MachObjectTests: XCTestCase {
 		let image = try Image(url: URL(fileURLWithPath: path))
 		switch image.content {
 		case let .fat(fat):
-			let arm64Mach = fat.architectures.compactMap { architecture -> Mach? in
+			guard let arm64Mach = (fat.architectures.compactMap { architecture -> Mach? in
 				if architecture.mach.cupType == .arm64 { return architecture.mach }
 				return nil
-			}
-			.first
-			print("\(String(describing: arm64Mach?.loadCommands))")
+			})
+				.first else { return }
+//			print("\(String(describing: arm64Mach?.loadCommands))")
+			print("\(String(describing: arm64Mach.cStrings))")
+
 		case let .mach(mach):
 			print("\(mach.loadCommands)")
 		}
