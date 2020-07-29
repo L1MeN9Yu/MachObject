@@ -8,7 +8,7 @@ import MachO
 // MARK: - Define
 
 public struct Mach {
-	let data: Data
+	public let data: Data
 	public let header: Header
 	public let loadCommands: [LoadCommand]
 	public let sections: [Section]

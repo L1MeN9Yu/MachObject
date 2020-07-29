@@ -8,8 +8,8 @@ import MachO
 // MARK: - Define
 
 public struct Image {
-	let url: URL
-	var content: Content
+	public let url: URL
+	public let content: Content
 
 	public init(url: URL) throws {
 		self.url = url

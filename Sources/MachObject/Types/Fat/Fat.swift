@@ -6,11 +6,9 @@ import Foundation
 import MachO
 
 public struct Fat {
-	var data: Data
-	var architectures: [Architecture]
-}
+	public let data: Data
+	public let architectures: [Architecture]
 
-extension Fat {
 	init(data: Data) throws {
 		self.data = data
 		let header: fat_header = data.get(atOffset: 0)
