@@ -51,6 +51,7 @@ private extension Mach {
 // MARK: - Readable Property
 
 public extension Mach {
-	var fileType: FileType { FileType(fileType: header.fileType) }
-	var cupType: CPUType { CPUType(cpuType: header.cupType) }
+	var fileType: FileType { header.fileType }
+	var cpuType: CPUType { header.cpuType }
+	var flags: Set<MachHeaderFlag> { header.readableFlag }
 }
