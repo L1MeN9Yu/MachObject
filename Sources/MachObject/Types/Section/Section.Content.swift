@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import MachO
 
 extension Section {
 	public enum Content {
@@ -21,11 +22,11 @@ extension Section {
 			}
 		}
 
-		static let __Text = "__TEXT"
-		static let __Data = "__DATA"
-		static let __RODATA = "__RODATA"
+		public static let __Text = SEG_TEXT
+		public static let __Data = SEG_DATA
+		public static let __RODATA = "__RODATA"
 
-		static let __text = "__text"
-		static let __cstring = "__cstring"
+		public static let __text = "__text"
+		public static let __cstring = "__cstring"
 	}
 }

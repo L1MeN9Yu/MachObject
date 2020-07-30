@@ -16,7 +16,7 @@ public struct Image {
 		let data = try Data(contentsOf: url, options: .mappedIfSafe)
 		let magic = data.magic
 		switch magic {
-		case FAT_CIGAM:
+		case FAT_CIGAM, FAT_MAGIC:
 			content = try .fat(Fat(data: data))
 		case MH_MAGIC, MH_MAGIC_64:
 			content = try .mach(Mach(data: data))

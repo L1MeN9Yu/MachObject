@@ -18,9 +18,9 @@ extension MutableFat {
 }
 
 extension MutableFat.Architecture {
-	mutating func update(action: (inout MutableMach) -> ()) {
+	mutating func update(action: (inout MutableMach) throws -> ()) throws {
 		var mutableMach = mach
-		action(&mutableMach)
+		try action(&mutableMach)
 		mach = mutableMach
 	}
 }

@@ -15,14 +15,14 @@ public struct MutableImage {
 	}
 }
 
-public extension MutableImage {
-	mutating func update(action: (inout MutableMach) -> ()) {
+extension MutableImage {
+	mutating func update(action: (inout MutableMach) throws -> ()) throws {
 		switch content {
 		case let .fat(fat):
 			var mutableFat = fat
-			mutableFat.architectures = fat.architectures.map { arch in
+			mutableFat.architectures = try fat.architectures.map { arch in
 				var mutableArch = arch
-				mutableArch.update(action: action)
+				try mutableArch.update(action: action)
 				return mutableArch
 			}
 			for arch in mutableFat.architectures {
@@ -32,8 +32,21 @@ public extension MutableImage {
 			content = .fat(mutableFat)
 		case let .mach(mach):
 			var mutableMach = mach
-			action(&mutableMach)
+			try action(&mutableMach)
 			content = .mach(mutableMach)
+		}
+	}
+}
+
+// MARK: - Save
+
+public extension MutableImage {
+	func save() throws {
+		switch content {
+		case let .fat(fat):
+			try fat.data.write(to: url, options: .atomic)
+		case let .mach(mach):
+			try mach.data.write(to: url, options: .atomic)
 		}
 	}
 }
