@@ -6,9 +6,9 @@ import Foundation
 import MachObject
 
 extension MutableFat {
-	public struct Architecture {
-		public private(set) var offset: UInt64
-		public private(set) var mach: MutableMach
+	struct Architecture {
+		private(set) var offset: UInt64
+		private(set) var mach: MutableMach
 
 		init(architecture: Fat.Architecture) {
 			offset = architecture.offset

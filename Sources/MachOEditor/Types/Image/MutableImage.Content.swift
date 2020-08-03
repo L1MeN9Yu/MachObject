@@ -6,7 +6,7 @@ import Foundation
 import MachObject
 
 extension MutableImage {
-	public enum Content {
+	enum Content {
 		case fat(MutableFat)
 		case mach(MutableMach)
 

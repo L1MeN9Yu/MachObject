@@ -5,11 +5,11 @@
 import Foundation
 import MachObject
 
-public struct MutableImage {
-	public let url: URL
-	public private(set) var content: Content
+struct MutableImage {
+	let url: URL
+	private(set) var content: Content
 
-	public init(image: Image) {
+	init(image: Image) {
 		url = image.url
 		content = Content(content: image.content)
 	}
@@ -40,7 +40,7 @@ extension MutableImage {
 
 // MARK: - Save
 
-public extension MutableImage {
+extension MutableImage {
 	func save() throws {
 		switch content {
 		case let .fat(fat):

@@ -5,18 +5,16 @@
 import Foundation
 import MachObject
 
-public struct MutableMach {
-	public private(set) var data: Data
+struct MutableMach {
+	private(set) var data: Data
 
-	init(mach: Mach) {
-		data = mach.data
-	}
+	init(mach: Mach) { data = mach.data }
 }
 
 // MARK: - Erase
 
 extension MutableMach {
-	mutating func erase(filePaths prefixes: [String], replacement: String = "") throws {
+	mutating func erase(filePaths prefixes: [String], replacement: String) throws {
 		guard !prefixes.isEmpty else { return }
 		let mach = try Mach(data: data)
 		guard let section = (mach.sections.first {
