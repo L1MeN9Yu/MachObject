@@ -26,3 +26,10 @@ extension MutableMach {
 		}, mapping: { _ in replacement })
 	}
 }
+
+extension MutableMach {
+	mutating func replace(string: String, replacement: String) {
+		guard !string.isEmpty else { return }
+		guard string.utf8.count >= replacement.utf8.count else { return }
+	}
+}

@@ -41,12 +41,12 @@ extension MutableImage {
 // MARK: - Save
 
 extension MutableImage {
-	func save() throws {
+	var data: Data {
 		switch content {
 		case let .fat(fat):
-			try fat.data.write(to: url, options: .atomic)
+			return fat.data
 		case let .mach(mach):
-			try mach.data.write(to: url, options: .atomic)
+			return mach.data
 		}
 	}
 }

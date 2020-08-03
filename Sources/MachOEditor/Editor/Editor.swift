@@ -8,12 +8,21 @@ import MachObject
 public struct Editor { private init() {} }
 
 public extension Editor {
-	static func erase(url: URL, filePath prefixes: [String], replacement: String = "") throws {
-		let image = try Image(url: url)
+	static func erase(filePath prefixes: [String], replacement: String = "", macho url: URL) throws -> Data {
+		let image = try Image.load(url: url)
 		var mutableImage = MutableImage(image: image)
 		try mutableImage.update { (mach: inout MutableMach) throws in
 			try mach.erase(filePaths: prefixes, replacement: replacement)
 		}
-		try mutableImage.save()
+		return mutableImage.data
+	}
+}
+
+public extension Editor {
+	static func replace(keyword: String, replacement: String, macho url: URL) throws -> Data {
+		let image = try Image.load(url: url)
+		var mutableImage = MutableImage(image: image)
+		try mutableImage.update { (mach: inout MutableMach) throws in
+		}
 	}
 }
