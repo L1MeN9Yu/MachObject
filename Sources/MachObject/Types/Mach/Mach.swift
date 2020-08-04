@@ -48,6 +48,14 @@ private extension Mach {
 	}
 }
 
+public extension Mach {
+	func section(of segmentName: String, name: String) -> Section? {
+		sections.first { (section: Section) -> Bool in
+			section.segmentName == segmentName && section.name == name
+		}
+	}
+}
+
 // MARK: - Readable Property
 
 public extension Mach {

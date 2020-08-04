@@ -13,20 +13,13 @@ extension Section {
 
 		init(segmentName: String, name: String, machoData: Data, range: Range<UInt64>) {
 			switch (segmentName, name) {
-			case (Self.__Text, Self.__cstring):
+			case (SegmentName.__Text, Name.__cstring):
 				self = .__Text__cstring(Section.__Text__cstring(machoData: machoData, range: range))
-			case (Self.__RODATA, Self.__cstring):
+			case (SegmentName.__RODATA, Name.__cstring):
 				self = .__RODATA__cstring(Section.__RODATA__cstring(machoData: machoData, range: range))
 			default:
 				self = .raw(Common(machoData: machoData, range: range))
 			}
 		}
-
-		public static let __Text = SEG_TEXT
-		public static let __Data = SEG_DATA
-		public static let __RODATA = "__RODATA"
-
-		public static let __text = "__text"
-		public static let __cstring = "__cstring"
 	}
 }

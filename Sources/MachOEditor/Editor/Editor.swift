@@ -19,10 +19,12 @@ public extension Editor {
 }
 
 public extension Editor {
-	static func replace(keyword: String, replacement: String, macho url: URL) throws -> Data {
+	static func replace(keyword: String, replacement: String, replaceStyle: ReplaceStyle, macho url: URL) throws -> Data {
 		let image = try Image.load(url: url)
 		var mutableImage = MutableImage(image: image)
 		try mutableImage.update { (mach: inout MutableMach) throws in
+			try mach.replace(keyword: keyword, replacement: replacement, replaceStyle: replaceStyle)
 		}
+		return mutableImage.data
 	}
 }

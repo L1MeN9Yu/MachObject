@@ -22,5 +22,15 @@ struct ReplaceString: ParsableCommand {
 	@Argument(help: ArgumentHelp(stringLiteral: "output file path"))
 	var outputFile: String
 
-	mutating func run() throws {}
+	@Flag(help: "Replace Whole String")
+	var whole: Bool = false
+
+	mutating func run() throws {
+		let replaceStyle: ReplaceStyle = whole ? .wholeString : .onlyKeyword
+		let data = try Editor.replace(
+			keyword: keyword, replacement: replacement,
+			replaceStyle: replaceStyle, macho: URL(fileURLWithPath: macho)
+		)
+		try data.write(to: URL(fileURLWithPath: outputFile), options: .atomic)
+	}
 }

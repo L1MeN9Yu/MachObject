@@ -10,11 +10,11 @@ Todo list for project.
 ## MachOEditor
 
 - [ ] Errors
-- [ ] Replace String Keyword
+- [x] Replace String Keyword
 
 ## MachOCLI
 
 - [ ] Dump Objective-C
 - [ ] Dump Swift
-- [ ] Wrap Replace String Keyword
+- [x] Wrap Replace String Keyword
 - [ ] Info Command With Options

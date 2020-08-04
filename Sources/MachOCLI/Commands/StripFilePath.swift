@@ -24,7 +24,7 @@ struct StripFilePath: ParsableCommand {
 	var outputFile: String
 
 	mutating func run() throws {
-		let data = try Editor.erase(url: URL(fileURLWithPath: macho), filePath: [prefix], replacement: replacement)
+		let data = try Editor.erase(filePath: [prefix], replacement: replacement, macho: URL(fileURLWithPath: macho))
 		try data.write(to: URL(fileURLWithPath: outputFile), options: .atomic)
 	}
 }

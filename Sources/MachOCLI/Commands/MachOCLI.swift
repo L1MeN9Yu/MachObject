@@ -5,7 +5,7 @@
 import ArgumentParser
 import Foundation
 
-struct Command: ParsableCommand {
+struct MachOCLI: ParsableCommand {
 	static let configuration: CommandConfiguration = CommandConfiguration(
 		abstract: "MachO CLI",
 		discussion: "The MachO Tool",
