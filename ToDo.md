@@ -2,7 +2,7 @@
 
 Todo list for project.
 
-## MachObject
+## MachOParser
 
 - [ ] Parse Objective-C
 - [ ] Parse Swift
@@ -18,3 +18,4 @@ Todo list for project.
 - [ ] Dump Swift
 - [x] Wrap Replace String Keyword
 - [ ] Info Command With Options
+˚

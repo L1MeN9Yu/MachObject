@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import MachObject
+import MachOParser
 
 extension MutableFat {
 	struct Architecture {

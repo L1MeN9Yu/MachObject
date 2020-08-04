@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import MachObject
+import MachOParser
 
 struct MutableFat {
 	var data: Data

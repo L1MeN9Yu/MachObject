@@ -1,8 +1,8 @@
 import Foundation
-@testable import MachObject
+@testable import MachOParser
 import XCTest
 
-final class MachObjectTests: XCTestCase {
+final class MachOParserTests: XCTestCase {
 	func testExample() throws {
 		// This is an example of a functional test case.
 		// Use XCTAssert and related functions to verify your tests produce the correct

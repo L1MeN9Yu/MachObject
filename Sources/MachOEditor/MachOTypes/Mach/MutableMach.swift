@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import MachObject
+import MachOParser
 
 struct MutableMach {
 	private(set) var data: Data

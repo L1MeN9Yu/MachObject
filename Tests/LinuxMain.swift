@@ -1,7 +1,7 @@
 import XCTest
 
-import MachObjectTests
+import MachOParserTests
 
 var tests = [XCTestCaseEntry]()
-tests += MachObjectTests.allTests()
+tests += MachOParserTests.allTests()
 XCTMain(tests)

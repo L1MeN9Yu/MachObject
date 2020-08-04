@@ -4,8 +4,8 @@
 
 import ArgumentParser
 import Foundation
-import MachObject
 import MachOEditor
+import MachOParser
 
 struct ReplaceString: ParsableCommand {
 	static let configuration: CommandConfiguration = CommandConfiguration(abstract: "Replace Strings in Macho File CString ")

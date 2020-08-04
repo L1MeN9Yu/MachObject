@@ -1,6 +1,6 @@
 import Foundation
-import MachObject
 @testable import MachOEditor
+import MachOParser
 import XCTest
 
 final class MachOEditorTests: XCTestCase {

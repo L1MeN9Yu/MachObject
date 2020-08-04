@@ -4,7 +4,7 @@
 
 import ArgumentParser
 import Foundation
-import MachObject
+import MachOParser
 
 struct Info: ParsableCommand {
 	static let configuration: CommandConfiguration = CommandConfiguration(abstract: "Show Macho File Information")
