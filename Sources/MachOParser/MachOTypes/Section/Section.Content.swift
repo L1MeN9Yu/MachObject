@@ -13,7 +13,7 @@ extension Section {
 
 		init(segmentName: String, name: String, machoData: Data, range: Range<UInt64>) {
 			switch (segmentName, name) {
-			case (SegmentName.__Text, Name.__cstring):
+			case (SegmentName.__TEXT, Name.__cstring):
 				self = .__Text__cstring(Section.__Text__cstring(machoData: machoData, range: range))
 			case (SegmentName.__RODATA, Name.__cstring):
 				self = .__RODATA__cstring(Section.__RODATA__cstring(machoData: machoData, range: range))

@@ -17,8 +17,8 @@ extension MutableMach {
 	mutating func erase(filePaths prefixes: [String], replacement: String) throws {
 		guard !prefixes.isEmpty else { return }
 		let mach = try Mach(data: data)
-		guard let section = mach.section(of: Section.SegmentName.__Text, name: Section.Name.__cstring) else {
-			throw Error.sectionNotFound(name: Section.SegmentName.__Text)
+		guard let section = mach.section(of: Section.SegmentName.__TEXT, name: Section.Name.__cstring) else {
+			throw Error.sectionNotFound(name: Section.SegmentName.__TEXT)
 		}
 		data.replaceString(range: section.range.intRange, filter: { (string: String) -> Bool in
 			string.utf8.count >= replacement.utf8.count &&
@@ -32,8 +32,8 @@ extension MutableMach {
 		guard !keyword.isEmpty else { return }
 		guard keyword.utf8.count >= replacement.utf8.count else { throw Error.replaceStringLength }
 		let mach = try Mach(data: data)
-		guard let section = mach.section(of: Section.SegmentName.__Text, name: Section.Name.__cstring) else {
-			throw Error.sectionNotFound(name: Section.SegmentName.__Text)
+		guard let section = mach.section(of: Section.SegmentName.__TEXT, name: Section.Name.__cstring) else {
+			throw Error.sectionNotFound(name: Section.SegmentName.__TEXT)
 		}
 		let filter: (String) -> Bool = { string in
 			string.contains(keyword)

@@ -10,7 +10,8 @@ extension Section {
 }
 
 public extension Section.SegmentName {
-	static let __Text = SEG_TEXT
-	static let __Data = SEG_DATA
+	static let __TEXT = SEG_TEXT
+	static let __DATA = SEG_DATA
+	static let __DATA_CONST = "__DATA_CONST"
 	static let __RODATA = "__RODATA"
 }

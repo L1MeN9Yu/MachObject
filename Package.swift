@@ -13,7 +13,7 @@ let package = Package(
 		.package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.2.0")),
 	],
 	targets: [
-		.target(name: "MachOParser", dependencies: []),
+		.target(name: "MachOParser", dependencies: [], linkerSettings: [LinkerSetting.linkedLibrary("swiftDemangle")]),
 		.testTarget(name: "MachOParserTests", dependencies: ["MachOParser"]),
 		.target(name: "MachOEditor", dependencies: [.target(name: "MachOParser")]),
 		.testTarget(name: "MachOEditorTests", dependencies: ["MachOEditor"]),
