@@ -28,7 +28,7 @@ public extension Section.Name {
 	///    AssociatedTypeNames        int32
 	///  }
 	/// ```
-	static let __swift5protos = "__swift5protos"
+	static let __swift5_protos = "__swift5_protos"
 
 	/// This section contains an array of 32-bit signed integers.
 	/// Each integer is a relative offset that points to a protocol conformance descriptor in the `__TEXT.__const` section.
@@ -42,7 +42,7 @@ public extension Section.Name {
 	///    ConformanceFlags      uint32
 	///  }
 	/// ```
-	static let __swift5proto = "__swift5proto"
+	static let __swift5_proto = "__swift5_proto"
 
 	/// This section contains an array of 32-bit signed integers.
 	/// Each integer is a relative offset that points to a nominal type descriptor in the `__TEXT.__const` section.
