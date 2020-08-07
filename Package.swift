@@ -8,6 +8,7 @@ let package = Package(
 	products: [
 		.library(name: "MachOParser", targets: ["MachOParser"]),
 		.executable(name: "MachOCLI", targets: ["MachOCLI"]),
+		.executable(name: "Demo", targets: ["Demo"]),
 	],
 	dependencies: [
 		.package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.2.0")),
@@ -21,5 +22,6 @@ let package = Package(
 			.target(name: "MachOEditor"),
 			.product(name: "ArgumentParser", package: "swift-argument-parser"),
 		]),
+		.target(name: "Demo"),
 	]
 )

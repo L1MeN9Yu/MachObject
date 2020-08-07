@@ -4,7 +4,20 @@
 
 import Foundation
 
-struct SwiftParser {}
+struct SwiftParser { private init() {} }
+
+private extension SwiftParser {
+	static var mangledNameMap: [String: String] = [
+		"0x02f36d": "Int32",
+		"0x02cd6d": "Int16",
+		"0x027b6e": "UInt16",
+		"0x022b6c": "UInt32",
+		"0x02b98502": "Int64",
+		"0x02418a02": "UInt64",
+		"0x02958802": "CGFloat",
+	]
+	static var cacheNominalOffsetMap: [Int: String] = [:] // used for name demangle
+}
 
 extension SwiftParser {
 	static func parseProtos(mach: Mach) -> [SwiftMeta.ProtocolType] {
@@ -39,5 +52,67 @@ extension SwiftParser {
 			protocols.append(`protocol`)
 		}
 		return protocols
+	}
+
+	static func parseTypes(mach: Mach) {
+		guard let typesSection = mach.section(of: Section.SegmentName.__TEXT, name: Section.Name.__swift5_types) else {
+			return
+		}
+		for index in 0..<typesSection.count {
+			let indexOffset = index * typesSection.align + typesSection.range.lowerBound
+			let localOffset: Int32 = mach.data.get(atOffset: Int(indexOffset))
+			let nominalDescriptorOffset = Int(indexOffset) + Int(localOffset)
+			let flags: UInt32 = mach.data.get(atOffset: nominalDescriptorOffset)
+			let contextDescriptorFlags = SwiftMeta.ContextDescriptorFlags(value: flags)
+			guard let kind = contextDescriptorFlags.kind else { break }
+			switch kind {
+			case .class:
+				let classDescriptor: SwiftMeta.ClassDescriptor = mach.data.get(atOffset: nominalDescriptorOffset)
+				let nameOffset = classDescriptor.nameOffset(start: nominalDescriptorOffset)
+				let name = mach.data.get(atOffset: nameOffset)
+				var superClassName: String?
+				if let superclassTypeOffset = classDescriptor.superclassTypeOffset(start: nominalDescriptorOffset) {
+					let superclassType = mach.data.get(atOffset: superclassTypeOffset)
+					if !superclassType.isEmpty {
+						if superclassType.hasPrefix("0x") {
+							superClassName = mangledNameMap[superclassType] ?? superclassType
+						} else {
+							superClassName = superclassType
+						}
+					}
+				}
+				cacheNominalOffsetMap[nominalDescriptorOffset] = name
+				let fieldDescriptorOffset = classDescriptor.fieldDescriptorOffset(start: nominalDescriptorOffset)
+				let fieldDescriptor: SwiftMeta.FieldDescriptor = mach.data.get(atOffset: fieldDescriptorOffset)
+				let mangledTypeNameOffset = fieldDescriptor.mangledTypeNameOffset(start: fieldDescriptorOffset)
+				let mangledTypeName = mach.data.get(atOffset: mangledTypeNameOffset, fallbackConvert: true)
+				let fieldRecordOffsetStart = fieldDescriptor.fieldRecordsOffset(start: fieldDescriptorOffset)
+				for fieldRecordIndex in 0..<Int(fieldDescriptor.numFields) {
+					let fieldRecordOffset = fieldRecordOffsetStart + fieldRecordIndex * MemoryLayout<SwiftMeta.FieldRecord>.size
+					let fieldRecord: SwiftMeta.FieldRecord = mach.data.get(atOffset: fieldRecordOffset)
+					let mangledTypeNameOffset = fieldRecord.mangledTypeNameOffset(start: fieldRecordOffset)
+					let fieldNameOffset = fieldRecord.fieldNameOffset(start: fieldRecordOffset)
+					let mangledTypeName = mach.data.get(atOffset: mangledTypeNameOffset)
+					let fieldName = mach.data.get(atOffset: fieldNameOffset)
+					let typeName = SwiftDemangler.type(of: mangledTypeName)
+					print("\(fieldName):\(typeName)")
+				}
+			case .struct:
+				let structDescriptor: SwiftMeta.StructDescriptor = mach.data.get(atOffset: nominalDescriptorOffset)
+				let nameOffset = structDescriptor.nameOffset(start: nominalDescriptorOffset)
+				let name = mach.data.get(atOffset: nameOffset)
+				cacheNominalOffsetMap[nominalDescriptorOffset] = name
+			case .enum:
+				let enumDescriptor: SwiftMeta.EnumDescriptor = mach.data.get(atOffset: nominalDescriptorOffset)
+				let nameOffset = enumDescriptor.nameOffset(start: nominalDescriptorOffset)
+				let name = mach.data.get(atOffset: nameOffset)
+				cacheNominalOffsetMap[nominalDescriptorOffset] = name
+			default:
+				let nominalDescriptor: SwiftMeta.NominalDescriptor = mach.data.get(atOffset: nominalDescriptorOffset)
+				let nameOffset = nominalDescriptor.nameOffset(start: nominalDescriptorOffset)
+				let name = mach.data.get(atOffset: nameOffset)
+				cacheNominalOffsetMap[nominalDescriptorOffset] = name
+			}
+		}
 	}
 }

@@ -17,9 +17,27 @@ extension Data {
 		get(atOffset: range.startIndex, count: range.count / MemoryLayout<T>.stride)
 	}
 
-	func get(atOffset offset: Int) -> String {
+	func get(atOffset offset: Int, fallbackConvert: Bool = false) -> String {
 		withUnsafeBytes {
-			$0.bindMemory(to: UInt8.self).baseAddress!.advanced(by: offset) |> String.init(cString:)
+			switch fallbackConvert {
+			case false:
+				return $0.bindMemory(to: UInt8.self).baseAddress!.advanced(by: offset) |> String.init(cString:)
+			case true:
+				var address: Int = offset
+				var result: [UInt8] = []
+				while true {
+					let val: UInt8 = self[address]
+					if val == 0 { break }
+					address += 1
+					result.append(val)
+				}
+
+				if let str = String(bytes: result, encoding: String.Encoding.ascii) {
+					if str.isASCII { return str }
+				}
+
+				return result.reduce("0x") { (result, val: UInt8) -> String in result + String(format: "%02x", val) }
+			}
 		}
 	}
 }
