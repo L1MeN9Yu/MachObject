@@ -87,6 +87,7 @@ extension SwiftParser {
 				let mangledTypeNameOffset = fieldDescriptor.mangledTypeNameOffset(start: fieldDescriptorOffset)
 				let mangledTypeName = mach.data.get(atOffset: mangledTypeNameOffset, fallbackConvert: true)
 				let fieldRecordOffsetStart = fieldDescriptor.fieldRecordsOffset(start: fieldDescriptorOffset)
+				var fields = [SwiftMeta.Field]()
 				for fieldRecordIndex in 0..<Int(fieldDescriptor.numFields) {
 					let fieldRecordOffset = fieldRecordOffsetStart + fieldRecordIndex * MemoryLayout<SwiftMeta.FieldRecord>.size
 					let fieldRecord: SwiftMeta.FieldRecord = mach.data.get(atOffset: fieldRecordOffset)
@@ -95,7 +96,11 @@ extension SwiftParser {
 					let mangledTypeName = mach.data.get(atOffset: mangledTypeNameOffset)
 					let fieldName = mach.data.get(atOffset: fieldNameOffset)
 					let typeName = SwiftDemangler.type(of: mangledTypeName)
-					print("\(fieldName):\(typeName)")
+					let field = SwiftMeta.Field(name: fieldName, type: typeName, mangledTypeNameOffset: mangledTypeNameOffset)
+					fields.append(field)
+				}
+				if !mangledTypeName.isEmpty && !mangledNameMap.keys.contains(mangledTypeName) {
+					mangledNameMap[mangledTypeName] = name
 				}
 			case .struct:
 				let structDescriptor: SwiftMeta.StructDescriptor = mach.data.get(atOffset: nominalDescriptorOffset)

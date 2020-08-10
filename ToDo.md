@@ -7,6 +7,10 @@ Todo list for project.
 - [ ] Parse Objective-C
 - [ ] Parse Swift
 
+## SwiftMeta
+
+- [ ] Refactor
+
 ## MachOEditor
 
 - [ ] Errors
@@ -18,4 +22,3 @@ Todo list for project.
 - [ ] Dump Swift
 - [x] Wrap Replace String Keyword
 - [ ] Info Command With Options
-˚
