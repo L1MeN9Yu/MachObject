@@ -11,6 +11,10 @@ Todo list for project.
 
 - [ ] Refactor
 
+## CodeSignParser
+
+- [ ] Endian
+
 ## MachOEditor
 
 - [ ] Errors

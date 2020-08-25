@@ -1,3 +1,3 @@
 # MachObject
 
-A Macho file parser and editor project.
+[WIP] A Macho file parser and editor project.

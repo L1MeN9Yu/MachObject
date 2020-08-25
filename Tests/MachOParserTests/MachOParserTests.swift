@@ -25,9 +25,13 @@ final class MachOParserTests: XCTestCase {
 		print("fieldRecordSize : \(fieldRecordSize)")
 	}
 
+	func testEntitlements() throws {
+		let mach = try getMach()
+		CodeSignParser.parse(mach: mach)
+	}
+
 	private func getMach() throws -> Mach {
-		let path = "/Users/limengyu/Desktop/Demo"
-//		let path = "/Users/limengyu/Desktop/Lagrange_Dynamic"
+		let path = "/Applications/Visual Studio Code.app/Contents/MacOS/Electron"
 		let image = try Image(url: URL(fileURLWithPath: path))
 		switch image.content {
 		case let .fat(fat):
@@ -40,6 +44,10 @@ final class MachOParserTests: XCTestCase {
 		case let .mach(mach):
 			return mach
 		}
+	}
+
+	func testByteOrder() {
+		print(ByteOrder.current)
 	}
 
 	static var allTests = [

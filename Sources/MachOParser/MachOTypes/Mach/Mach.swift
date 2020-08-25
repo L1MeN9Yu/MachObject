@@ -9,6 +9,7 @@ import MachO
 
 public struct Mach {
 	public let data: Data
+	public let swapped: Bool
 	public let header: Header
 	public let loadCommands: [LoadCommand]
 	public let sections: [Section]
@@ -17,9 +18,9 @@ public struct Mach {
 		let magic = data.magic
 		switch magic {
 		case MH_MAGIC:
-			self.init(data32: data)
+			self.init(data32: data, swapped: magic == MH_CIGAM)
 		case MH_MAGIC_64:
-			self.init(data64: data)
+			self.init(data64: data, swapped: magic == MH_CIGAM_64)
 		default:
 			throw Error.magic(magic)
 		}
@@ -27,8 +28,9 @@ public struct Mach {
 }
 
 private extension Mach {
-	init(data32: Data) {
+	init(data32: Data, swapped: Bool) {
 		data = data32
+		self.swapped = swapped
 		let header: mach_header = data32.get(atOffset: 0)
 		self.header = ._32(MachHeader32(header: header))
 		loadCommands = Self.parseLoadCommand(
@@ -37,8 +39,9 @@ private extension Mach {
 		sections = Self.parseSections(loadCommands: loadCommands, machoData: data32)
 	}
 
-	init(data64: Data) {
+	init(data64: Data, swapped: Bool) {
 		data = data64
+		self.swapped = swapped
 		let header: mach_header_64 = data64.get(atOffset: 0)
 		self.header = ._64(MachHeader64(header: header))
 		loadCommands = Self.parseLoadCommand(
@@ -62,4 +65,5 @@ public extension Mach {
 	var fileType: FileType { header.fileType }
 	var cpuType: CPUType { header.cpuType }
 	var flags: Set<MachHeaderFlag> { header.readableFlag }
+	var codeSignature: CodeSignature? { CodeSignature(tuple: CodeSignParser.parse(mach: self)) }
 }
