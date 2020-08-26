@@ -11,7 +11,7 @@ public struct Mach {
     public let data: Data
     public let swapped: Bool
     public let header: Header
-    public let loadCommands: [LoadCommand]
+    public let allLoadCommands: [LoadCommand]
     public let sections: [Section]
 
     public init(data: Data) throws {
@@ -33,10 +33,10 @@ private extension Mach {
         self.swapped = swapped
         let header: mach_header = data32.get(atOffset: 0)
         self.header = ._32(MachHeader32(header: header))
-        loadCommands = Self.parseLoadCommand(
+        allLoadCommands = Self.parseLoadCommand(
             data: data32, count: header.ncmds, headerSize: MemoryLayout<mach_header>.size
         )
-        sections = Self.parseSections(loadCommands: loadCommands, machoData: data32)
+        sections = Self.parseSections(loadCommands: allLoadCommands, machoData: data32)
     }
 
     init(data64: Data, swapped: Bool) {
@@ -44,10 +44,10 @@ private extension Mach {
         self.swapped = swapped
         let header: mach_header_64 = data64.get(atOffset: 0)
         self.header = ._64(MachHeader64(header: header))
-        loadCommands = Self.parseLoadCommand(
+        allLoadCommands = Self.parseLoadCommand(
             data: data64, count: header.ncmds, headerSize: MemoryLayout<mach_header_64>.size
         )
-        sections = Self.parseSections(loadCommands: loadCommands, machoData: data64)
+        sections = Self.parseSections(loadCommands: allLoadCommands, machoData: data64)
     }
 }
 
@@ -63,7 +63,14 @@ public extension Mach {
 
 public extension Mach {
     var fileType: FileType { header.fileType }
+
     var cpuType: CPUType { header.cpuType }
+
     var flags: Set<MachHeaderFlag> { header.readableFlag }
+
     var codeSignature: CodeSignature? { CodeSignature(tuple: CodeSignParser.parse(mach: self)) }
+
+    func loadCommands<T: LoadCommand>() -> [T]? { allLoadCommands.compactMap { $0 as? T } }
+
+    func loadCommand<T: LoadCommand>() -> T? { loadCommands()?.first }
 }

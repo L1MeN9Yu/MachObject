@@ -11,7 +11,7 @@ extension CodeSignParser {
         // todo codeDirectoryData
         let codeDirectoryData: Data? = nil
         var entitlementsData: Data?
-        guard let codeSignatureLC = (mach.loadCommands.first { $0 is CodeSignatureLC }) as? CodeSignatureLC else {
+        guard let codeSignatureLC: CodeSignatureLC = mach.loadCommand() else {
             return (codeDirectoryData, entitlementsData)
         }
         let superBlob: SuperBlob = mach.data.get(atOffset: Int(codeSignatureLC.dataOffset))
