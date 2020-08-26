@@ -9,7 +9,7 @@ public struct Version {
 	public let minor: UInt
 	public let patch: UInt
 
-	init(machVersion: uint32) {
+	init(machVersion: UInt32) {
 		major = UInt((machVersion & 0xFFFF_0000) >> 16)
 		minor = UInt((machVersion & 0x0000_FF00) >> 16)
 		patch = UInt((machVersion & 0x0000_00FF) >> 16)

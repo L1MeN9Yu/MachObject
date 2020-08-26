@@ -2,6 +2,7 @@
 // Created by Mengyu Li on 2020/7/24.
 //
 
+import CoreGraphics
 import Foundation
 import MachO
 
