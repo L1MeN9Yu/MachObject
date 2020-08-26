@@ -7,14 +7,14 @@ import Foundation
 import MachOParser
 
 struct Info: ParsableCommand {
-	static let configuration: CommandConfiguration = CommandConfiguration(abstract: "Show Macho File Information")
+    static let configuration: CommandConfiguration = CommandConfiguration(abstract: "Show Macho File Information")
 
-	@Argument(help: "mach file path")
-	var macho: String
+    @Argument(help: "mach file path")
+    var macho: String
 
-	mutating func run() throws {
-		let fileURL = URL(fileURLWithPath: macho)
-		let image = try Image.load(url: fileURL)
-		print("\(image)")
-	}
+    mutating func run() throws {
+        let fileURL = URL(fileURLWithPath: macho)
+        let image = try Image.load(url: fileURL)
+        print("\(image)")
+    }
 }

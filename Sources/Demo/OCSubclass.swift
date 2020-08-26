@@ -5,21 +5,21 @@
 import Foundation
 
 class OCSubclass: OCClass {
-	let subValue: Int
+    let subValue: Int
 
-	init(value: Int, subValue: Int) {
-		self.subValue = subValue
-		super.init(value: value)
-	}
+    init(value: Int, subValue: Int) {
+        self.subValue = subValue
+        super.init(value: value)
+    }
 }
 
 extension OCSubclass {
-	override func superFunc() {
-		super.superFunc()
-	}
+    override func superFunc() {
+        super.superFunc()
+    }
 }
 
 extension OCSubclass {
-	@objc
-	func subFunc() {}
+    @objc
+    func subFunc() {}
 }

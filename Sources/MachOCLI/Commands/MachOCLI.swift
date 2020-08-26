@@ -6,12 +6,12 @@ import ArgumentParser
 import Foundation
 
 struct MachOCLI: ParsableCommand {
-	static let configuration: CommandConfiguration = CommandConfiguration(
-		abstract: "MachO CLI",
-		discussion: "The MachO Tool",
-		version: "0.0.1",
-		shouldDisplay: false,
-		subcommands: [Info.self, StripFilePath.self, ReplaceString.self],
-		defaultSubcommand: Info.self
-	)
+    static let configuration: CommandConfiguration = CommandConfiguration(
+        abstract: "MachO CLI",
+        discussion: "The MachO Tool",
+        version: "0.0.1",
+        shouldDisplay: false,
+        subcommands: [Info.self, StripFilePath.self, ReplaceString.self],
+        defaultSubcommand: Info.self
+    )
 }

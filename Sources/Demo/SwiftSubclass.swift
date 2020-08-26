@@ -5,18 +5,18 @@
 import Foundation
 
 class SwiftSubclass: SwiftClass {
-	let subValue: Int
+    let subValue: Int
 
-	init(superValue: Int, subValue: Int) {
-		self.subValue = subValue
-		super.init(superValue: superValue)
-	}
+    init(superValue: Int, subValue: Int) {
+        self.subValue = subValue
+        super.init(superValue: superValue)
+    }
 
-	override func superOverrideFunc() {
-		super.superOverrideFunc()
-	}
+    override func superOverrideFunc() {
+        super.superOverrideFunc()
+    }
 }
 
 extension SwiftSubclass {
-	func subFunc() {}
+    func subFunc() {}
 }

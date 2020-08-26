@@ -5,27 +5,27 @@
 import Foundation
 
 extension SwiftMeta {
-	struct NominalDescriptor {
-		let flags: UInt32
-		let parent: Int32
-		let name: Int32
-		let accessFunction: Int32
-	}
+    struct NominalDescriptor {
+        let flags: UInt32
+        let parent: Int32
+        let name: Int32
+        let accessFunction: Int32
+    }
 }
 
 extension SwiftMeta.NominalDescriptor {
-	func nameOffset(start: Int) -> Int {
-		start +
-			MemoryLayout.size(ofValue: flags) +
-			MemoryLayout.size(ofValue: parent) +
-			Int(name)
-	}
+    func nameOffset(start: Int) -> Int {
+        start +
+            MemoryLayout.size(ofValue: flags) +
+            MemoryLayout.size(ofValue: parent) +
+            Int(name)
+    }
 
-	func accessFunctionOffset(start: Int) -> Int {
-		start +
-			MemoryLayout.size(ofValue: flags) +
-			MemoryLayout.size(ofValue: parent) +
-			MemoryLayout.size(ofValue: name) +
-			Int(accessFunction)
-	}
+    func accessFunctionOffset(start: Int) -> Int {
+        start +
+            MemoryLayout.size(ofValue: flags) +
+            MemoryLayout.size(ofValue: parent) +
+            MemoryLayout.size(ofValue: name) +
+            Int(accessFunction)
+    }
 }

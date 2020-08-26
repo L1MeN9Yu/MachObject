@@ -5,14 +5,14 @@
 import Foundation
 
 extension Section {
-	public struct __Text__cstring: SectionContent {
-		public typealias Value = [String]
-		public let value: Value
+    public struct __Text__cstring: SectionContent {
+        public typealias Value = [String]
+        public let value: Value
 
-		public init(machoData: Data, range: Range<UInt64>) {
-			value = machoData.subdata(in: range.intRange).split(separator: 0).compactMap { sequence -> String? in
-				String(bytes: sequence, encoding: .utf8)
-			}
-		}
-	}
+        public init(machoData: Data, range: Range<UInt64>) {
+            value = machoData.subdata(in: range.intRange).split(separator: 0).compactMap { sequence -> String? in
+                String(bytes: sequence, encoding: .utf8)
+            }
+        }
+    }
 }

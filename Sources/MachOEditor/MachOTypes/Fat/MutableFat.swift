@@ -6,13 +6,13 @@ import Foundation
 import MachOParser
 
 struct MutableFat {
-	var data: Data
-	var architectures: [Architecture]
+    var data: Data
+    var architectures: [Architecture]
 
-	init(fat: Fat) {
-		data = fat.data
-		architectures = fat.architectures.map { architecture -> Architecture in
-			Architecture(architecture: architecture)
-		}
-	}
+    init(fat: Fat) {
+        data = fat.data
+        architectures = fat.architectures.map { architecture -> Architecture in
+            Architecture(architecture: architecture)
+        }
+    }
 }

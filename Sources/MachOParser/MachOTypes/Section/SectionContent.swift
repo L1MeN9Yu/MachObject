@@ -5,7 +5,7 @@
 import Foundation
 
 public protocol SectionContent {
-	associatedtype Value
-	var value: Value { get }
-	init(machoData: Data, range: Range<UInt64>)
+    associatedtype Value
+    var value: Value { get }
+    init(machoData: Data, range: Range<UInt64>)
 }

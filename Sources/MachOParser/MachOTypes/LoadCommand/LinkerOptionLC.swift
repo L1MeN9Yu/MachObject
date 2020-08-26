@@ -6,12 +6,12 @@ import Foundation
 import MachO
 
 public struct LinkerOptionLC: LoadCommand {
-	public static let id: UInt32 = UInt32(LC_LINKER_OPTION)
+    public static let id: UInt32 = UInt32(LC_LINKER_OPTION)
 
-	public let count: UInt32
+    public let count: UInt32
 
-	public init(machData: Data, offset: Int) {
-		let command: linker_option_command = machData.get(atOffset: offset)
-		count = command.count
-	}
+    public init(machData: Data, offset: Int) {
+        let command: linker_option_command = machData.get(atOffset: offset)
+        count = command.count
+    }
 }

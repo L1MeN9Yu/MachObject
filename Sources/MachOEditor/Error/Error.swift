@@ -5,6 +5,6 @@
 import Foundation
 
 enum Error: Swift.Error {
-	case replaceStringLength
-	case sectionNotFound(name: String)
+    case replaceStringLength
+    case sectionNotFound(name: String)
 }

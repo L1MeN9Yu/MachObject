@@ -5,6 +5,6 @@
 import Foundation
 
 public enum ReplaceStyle {
-	case onlyKeyword
-	case wholeString
+    case onlyKeyword
+    case wholeString
 }

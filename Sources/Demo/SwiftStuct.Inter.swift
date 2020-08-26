@@ -5,7 +5,7 @@
 import Foundation
 
 extension SwiftStruct {
-	struct Inner {
-		let value: Int
-	}
+    struct Inner {
+        let value: Int
+    }
 }

@@ -5,30 +5,30 @@
 import Foundation
 
 extension SwiftMeta {
-	struct EnumDescriptor {
-		let flags: UInt32
-		let parent: Int32
-		let name: Int32
-		let accessFunction: Int32
-		let fieldDescriptor: Int32
-		let numPayloadCasesAndPayloadSizeOffset: UInt32
-		let numEmptyCases: UInt32
-	}
+    struct EnumDescriptor {
+        let flags: UInt32
+        let parent: Int32
+        let name: Int32
+        let accessFunction: Int32
+        let fieldDescriptor: Int32
+        let numPayloadCasesAndPayloadSizeOffset: UInt32
+        let numEmptyCases: UInt32
+    }
 }
 
 extension SwiftMeta.EnumDescriptor {
-	func nameOffset(start: Int) -> Int {
-		start +
-			MemoryLayout.size(ofValue: flags) +
-			MemoryLayout.size(ofValue: parent) +
-			Int(name)
-	}
+    func nameOffset(start: Int) -> Int {
+        start +
+            MemoryLayout.size(ofValue: flags) +
+            MemoryLayout.size(ofValue: parent) +
+            Int(name)
+    }
 
-	func accessFunctionOffset(start: Int) -> Int {
-		start +
-			MemoryLayout.size(ofValue: flags) +
-			MemoryLayout.size(ofValue: parent) +
-			MemoryLayout.size(ofValue: name) +
-			Int(accessFunction)
-	}
+    func accessFunctionOffset(start: Int) -> Int {
+        start +
+            MemoryLayout.size(ofValue: flags) +
+            MemoryLayout.size(ofValue: parent) +
+            MemoryLayout.size(ofValue: name) +
+            Int(accessFunction)
+    }
 }

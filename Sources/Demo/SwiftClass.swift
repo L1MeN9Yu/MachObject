@@ -5,13 +5,13 @@
 import Foundation
 
 class SwiftClass {
-	let superValue: Int
+    let superValue: Int
 
-	init(superValue: Int) { self.superValue = superValue }
+    init(superValue: Int) { self.superValue = superValue }
 
-	func superOverrideFunc() {}
+    func superOverrideFunc() {}
 }
 
 extension SwiftClass {
-	func superFunc() {}
+    func superFunc() {}
 }

@@ -5,10 +5,10 @@
 import Foundation
 
 struct SwiftStruct {
-	let value: Int
+    let value: Int
 }
 
 extension SwiftStruct {
-	static let double: Double = Double.pi
-	static let innerType = Inner.self
+    static let double: Double = Double.pi
+    static let innerType = Inner.self
 }

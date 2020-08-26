@@ -5,12 +5,12 @@
 import Foundation
 
 extension SwiftMeta {
-	struct ClassType {
-		let name: String
-		let superName: String?
+    struct ClassType {
+        let name: String
+        let superName: String?
 
-		let mangledName: String
+        let mangledName: String
 
-		let fields: [Field]
-	}
+        let fields: [Field]
+    }
 }

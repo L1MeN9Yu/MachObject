@@ -6,17 +6,17 @@ import Foundation
 import MachOParser
 
 extension MutableImage {
-	enum Content {
-		case fat(MutableFat)
-		case mach(MutableMach)
+    enum Content {
+        case fat(MutableFat)
+        case mach(MutableMach)
 
-		init(content: Image.Content) {
-			switch content {
-			case let .fat(fat):
-				self = .fat(MutableFat(fat: fat))
-			case let .mach(mach):
-				self = .mach(MutableMach(mach: mach))
-			}
-		}
-	}
+        init(content: Image.Content) {
+            switch content {
+            case let .fat(fat):
+                self = .fat(MutableFat(fat: fat))
+            case let .mach(mach):
+                self = .mach(MutableMach(mach: mach))
+            }
+        }
+    }
 }
