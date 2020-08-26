@@ -8,7 +8,8 @@ struct CodeSignParser { private init() {} }
 
 extension CodeSignParser {
     static func parse(mach: Mach) -> (Data?, Data?) {
-        var codeDirectoryData: Data?
+        // todo codeDirectoryData
+        let codeDirectoryData: Data? = nil
         var entitlementsData: Data?
         guard let codeSignatureLC = (mach.loadCommands.first { $0 is CodeSignatureLC }) as? CodeSignatureLC else {
             return (codeDirectoryData, entitlementsData)
