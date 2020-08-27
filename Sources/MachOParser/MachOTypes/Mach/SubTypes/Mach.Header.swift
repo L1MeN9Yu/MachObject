@@ -81,5 +81,5 @@ public extension Mach.Header {
 
     var fileType: Mach.FileType { Mach.FileType(fileType: rawFileType) }
 
-    var readableFlag: Set<MachHeaderFlag> { Set<MachHeaderFlag>(rawValue: Int(rawFlags)) }
+    var readableFlag: Set<MachHeaderFlag> { Set<MachHeaderFlag>(rawValue: Int64(rawFlags)) }
 }

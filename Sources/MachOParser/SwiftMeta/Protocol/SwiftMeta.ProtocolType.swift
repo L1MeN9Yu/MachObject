@@ -17,7 +17,7 @@ extension SwiftMeta {
             self.offset = offset
             self.name = name
             self.associatedTypeNames = associatedTypeNames
-            flag = Set<Flag>(rawValue: Int(raw.flags))
+            flag = Set<Flag>(rawValue: Int64(raw.flags))
         }
     }
 }
@@ -37,7 +37,7 @@ extension SwiftMeta.ProtocolType {
 }
 
 extension SwiftMeta.ProtocolType.Flag: Option {
-    var value: Int {
+    var value: Int64 {
         switch self {
         case .isSwift:
             return 1 << 0

@@ -5,12 +5,12 @@
 import Foundation
 
 public protocol Option: Hashable, CaseIterable {
-    var value: Int { get }
+    var value: Int64 { get }
 }
 
 extension Set where Element: Option {
-    var rawValue: Int {
-        var rawValue: Int = 0
+    var rawValue: Int64 {
+        var rawValue: Int64 = 0
         for element in Element.allCases {
             if contains(element) {
                 rawValue |= element.value
@@ -20,7 +20,7 @@ extension Set where Element: Option {
         return rawValue
     }
 
-    init(rawValue: Int) {
+    init(rawValue: Int64) {
         var result = [Element]()
         for element in Element.allCases {
             if rawValue & element.value == element.value {
