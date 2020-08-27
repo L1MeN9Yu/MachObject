@@ -8,19 +8,19 @@ extension Mach {
     public enum Header {
         case _32(MachHeader32)
         case _64(MachHeader64)
-
-        var magic: UInt32 {
-            switch self {
-            case let ._32(header):
-                return header.magic
-            case let ._64(header):
-                return header.magic
-            }
-        }
     }
 }
 
 public extension Mach.Header {
+    var magic: UInt32 {
+        switch self {
+        case let ._32(header):
+            return header.magic
+        case let ._64(header):
+            return header.magic
+        }
+    }
+
     var rawCpuType: cpu_type_t {
         switch self {
         case let ._32(header):
