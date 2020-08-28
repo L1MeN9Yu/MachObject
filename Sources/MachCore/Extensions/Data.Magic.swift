@@ -4,7 +4,7 @@
 
 import struct Foundation.Data
 
-extension Data {
+public extension Data {
     typealias SizeType = UInt32
     var magic: SizeType? {
         guard count >= MemoryLayout<SizeType>.size else { return nil }

@@ -5,15 +5,15 @@
 import Foundation
 import MachO
 
-extension segment_command_64 { var name: String { String(bytesTuple: segname) } }
+public extension segment_command_64 { var name: String { String(bytesTuple: segname) } }
 
-extension segment_command { var name: String { String(bytesTuple: segname) } }
+public extension segment_command { var name: String { String(bytesTuple: segname) } }
 
-extension section_64 { var name: String { String(bytesTuple: sectname) } }
+public extension section_64 { var name: String { String(bytesTuple: sectname) } }
 
-extension section { var name: String { String(bytesTuple: sectname) } }
+public extension section { var name: String { String(bytesTuple: sectname) } }
 
-extension String {
+public extension String {
     init(bytesTuple: (Int8, Int8, Int8, Int8, Int8, Int8, Int8, Int8, Int8, Int8, Int8, Int8, Int8, Int8, Int8, Int8)) {
         var table = [Int8](repeating: 0, count: 17)
         withUnsafePointer(to: bytesTuple) { ptr in
@@ -32,6 +32,6 @@ extension String {
         let length = commandSize - loadCommandStringOffset
         self = String(data: data[stringOffset..<(stringOffset + length)], encoding: .utf8)?
             .trimmingCharacters(in: .controlCharacters)
-            ?? "Get String Error"
+            ?? ""
     }
 }

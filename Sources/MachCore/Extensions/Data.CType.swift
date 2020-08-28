@@ -4,7 +4,7 @@
 
 import struct Foundation.Data
 
-extension Data {
+public extension Data {
     func get<T>(atOffset offset: Int) -> T {
         withUnsafeBytes { $0.baseAddress!.advanced(by: offset).get() }
     }

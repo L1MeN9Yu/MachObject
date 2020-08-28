@@ -3,6 +3,7 @@
 //
 
 import Foundation
+@_implementationOnly import MachCore
 import MachO
 
 public struct UUIDLC: LoadCommand {

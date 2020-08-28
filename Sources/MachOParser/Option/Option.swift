@@ -8,7 +8,7 @@ public protocol Option: Hashable, CaseIterable {
     var value: Int64 { get }
 }
 
-extension Set where Element: Option {
+public extension Set where Element: Option {
     var rawValue: Int64 {
         var rawValue: Int64 = 0
         for element in Element.allCases {

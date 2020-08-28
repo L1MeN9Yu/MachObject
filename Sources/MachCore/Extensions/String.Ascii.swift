@@ -4,7 +4,7 @@
 
 import Foundation
 
-extension String {
+public extension String {
     var isASCII: Bool {
         unicodeScalars.allSatisfy { (element: UnicodeScalarView.Element) -> Bool in element.isASCII }
     }

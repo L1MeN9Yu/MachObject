@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import MachOParser
 
 extension SwiftMeta {
     struct ProtocolType {

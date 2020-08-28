@@ -3,6 +3,8 @@
 //
 
 import Foundation
+@_implementationOnly import MachCore
+import MachOParser
 
 struct SwiftParser { private init() {} }
 

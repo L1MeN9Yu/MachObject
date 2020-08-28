@@ -4,12 +4,12 @@
 
 import Foundation
 
-enum ByteOrder {
+public enum ByteOrder {
     case little
     case big
 }
 
-extension ByteOrder {
+public extension ByteOrder {
     static let current: Self = {
         switch 0x123456.bigEndian == 0x123456 {
         case true:

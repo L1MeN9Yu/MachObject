@@ -4,9 +4,7 @@
 
 import Foundation
 
-struct SwiftDemangler {
-    private init() {}
-}
+struct SwiftDemangler { private init() {} }
 
 extension SwiftDemangler {
     static func canDemangleFromRuntime(_ name: String) -> Bool {

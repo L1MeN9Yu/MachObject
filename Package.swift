@@ -14,14 +14,27 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.2.0")),
     ],
     targets: [
-        .target(name: "MachOParser", dependencies: [], linkerSettings: [LinkerSetting.linkedLibrary("swiftDemangle")]),
-        .testTarget(name: "MachOParserTests", dependencies: ["MachOParser"]),
-        .target(name: "MachOEditor", dependencies: [.target(name: "MachOParser")]),
-        .testTarget(name: "MachOEditorTests", dependencies: ["MachOEditor"]),
+        .target(name: "MachCore"),
+        .target(name: "MachOParser", dependencies: [
+            .target(name: "MachCore"),
+        ]),
+        .target(name: "MachOSwiftParser", dependencies: [
+            .target(name: "MachCore"),
+            .target(name: "MachOParser"),
+        ], linkerSettings: [
+            LinkerSetting.linkedLibrary("swiftDemangle"),
+        ]),
+        .target(name: "MachOEditor", dependencies: [
+            .target(name: "MachCore"),
+            .target(name: "MachOParser"),
+            .target(name: "MachOSwiftParser"),
+        ]),
         .target(name: "MachOCLI", dependencies: [
             .target(name: "MachOEditor"),
             .product(name: "ArgumentParser", package: "swift-argument-parser"),
         ]),
         .target(name: "Demo"),
+        .testTarget(name: "MachOEditorTests", dependencies: ["MachOEditor"]),
+        .testTarget(name: "MachOParserTests", dependencies: ["MachOParser"]),
     ]
 )
