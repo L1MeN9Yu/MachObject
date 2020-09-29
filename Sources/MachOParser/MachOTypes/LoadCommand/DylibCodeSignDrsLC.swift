@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct DylibCodeSignDrsLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_DYLIB_CODE_SIGN_DRS)
+    public static let id = UInt32(LC_DYLIB_CODE_SIGN_DRS)
 
     public let dataOffset: UInt32
     public let dataSize: UInt32

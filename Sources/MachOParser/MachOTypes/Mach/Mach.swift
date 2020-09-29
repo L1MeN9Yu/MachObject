@@ -73,4 +73,11 @@ public extension Mach {
     func loadCommands<T: LoadCommand>() -> [T]? { allLoadCommands.compactMap { $0 as? T } }
 
     func loadCommand<T: LoadCommand>() -> T? { loadCommands()?.first }
+
+    var exports: [String] {
+        guard let dyldInfoOnlyLC: DyldInfoOnlyLC = loadCommand() else { return [] }
+        let offset = Int(dyldInfoOnlyLC.exportOffset)
+        let trie = Trie(data: data, rootNodeOffset: offset)
+        return trie.exportedLabelStrings
+    }
 }

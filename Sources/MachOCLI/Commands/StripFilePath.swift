@@ -7,7 +7,7 @@ import Foundation
 import MachOEditor
 
 struct StripFilePath: ParsableCommand {
-    static let configuration: CommandConfiguration = CommandConfiguration(
+    static let configuration = CommandConfiguration(
         abstract: "Strip File Path Strings in Macho File CString "
     )
 

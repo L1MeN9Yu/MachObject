@@ -8,7 +8,7 @@ import MachOEditor
 import MachOParser
 
 struct ReplaceString: ParsableCommand {
-    static let configuration: CommandConfiguration = CommandConfiguration(abstract: "Replace Strings in Macho File CString ")
+    static let configuration = CommandConfiguration(abstract: "Replace Strings in Macho File CString ")
 
     @Argument(help: ArgumentHelp(stringLiteral: "macho file path"))
     var macho: String

@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct TwoLevelHintsLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_TWOLEVEL_HINTS)
+    public static let id = UInt32(LC_TWOLEVEL_HINTS)
     public let hintOffset: UInt32
     public let hintCount: UInt32
 

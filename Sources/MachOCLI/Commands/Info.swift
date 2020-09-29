@@ -7,7 +7,7 @@ import Foundation
 import MachOParser
 
 struct Info: ParsableCommand {
-    static let configuration: CommandConfiguration = CommandConfiguration(abstract: "Show Macho File Information")
+    static let configuration = CommandConfiguration(abstract: "Show Macho File Information")
 
     @Argument(help: "mach file path")
     var macho: String

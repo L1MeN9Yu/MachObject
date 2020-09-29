@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct ThreadLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_THREAD)
+    public static let id = UInt32(LC_THREAD)
 
     private let thread: thread_command
 

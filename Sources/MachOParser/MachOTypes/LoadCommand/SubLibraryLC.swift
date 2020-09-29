@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct SubLibraryLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_SUB_LIBRARY)
+    public static let id = UInt32(LC_SUB_LIBRARY)
     public let subLibrary: String
 
     public init(machData: Data, offset: Int) {

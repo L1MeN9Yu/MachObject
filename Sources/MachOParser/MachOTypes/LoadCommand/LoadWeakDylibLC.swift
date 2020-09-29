@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct LoadWeakDylibLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_LOAD_WEAK_DYLIB)
+    public static let id = UInt32(LC_LOAD_WEAK_DYLIB)
 
     public let name: String
     public let date: Date

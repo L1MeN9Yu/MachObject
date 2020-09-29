@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct SegmentSplitInfoLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_SEGMENT_SPLIT_INFO)
+    public static let id = UInt32(LC_SEGMENT_SPLIT_INFO)
 
     public let dataOffset: UInt32
     public let dataSize: UInt32

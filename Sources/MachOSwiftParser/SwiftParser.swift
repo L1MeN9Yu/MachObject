@@ -6,7 +6,7 @@ import Foundation
 @_implementationOnly import MachCore
 import MachOParser
 
-struct SwiftParser { private init() {} }
+public struct SwiftParser { private init() {} }
 
 private extension SwiftParser {
     static var mangledNameMap: [String: String] = [
@@ -21,7 +21,7 @@ private extension SwiftParser {
     static var cacheNominalOffsetMap: [Int: String] = [:] // used for name demangle
 }
 
-extension SwiftParser {
+public extension SwiftParser {
     static func parseProtos(mach: Mach) -> [SwiftMeta.ProtocolType] {
         var protocols = [SwiftMeta.ProtocolType]()
         guard let protosSection = mach.section(of: Section.SegmentName.__TEXT, name: Section.Name.__swift5_protos) else {

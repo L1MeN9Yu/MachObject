@@ -7,7 +7,7 @@ import Foundation
 import MachO
 
 public struct UUIDLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_UUID)
+    public static let id = UInt32(LC_UUID)
 
     public let uuid: UUID
 

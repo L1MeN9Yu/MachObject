@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct NoteLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_NOTE)
+    public static let id = UInt32(LC_NOTE)
     public let owner: String
     public let fileOffset: UInt64
     public let fileSize: UInt64

@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct IDDylinkerLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_ID_DYLINKER)
+    public static let id = UInt32(LC_ID_DYLINKER)
 
     public let name: String
 

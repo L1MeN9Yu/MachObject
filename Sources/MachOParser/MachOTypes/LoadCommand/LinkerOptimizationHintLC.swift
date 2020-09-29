@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct LinkerOptimizationHintLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_LINKER_OPTIMIZATION_HINT)
+    public static let id = UInt32(LC_LINKER_OPTIMIZATION_HINT)
 
     public let dataOffset: UInt32
     public let dataSize: UInt32

@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct SubUmbrellaLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_SUB_UMBRELLA)
+    public static let id = UInt32(LC_SUB_UMBRELLA)
 
     public let subUmbrella: String
 

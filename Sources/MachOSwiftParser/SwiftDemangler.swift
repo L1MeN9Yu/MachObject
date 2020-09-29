@@ -16,7 +16,7 @@ extension SwiftDemangler {
         guard canDemangleFromRuntime(fixedName) || canDemangleFromRuntime(name) else { return name }
 
         let bufLen: Int = 128 // may be 128 is big enough
-        var buf: [Int8] = [Int8](repeating: 0, count: bufLen)
+        var buf = [Int8](repeating: 0, count: bufLen)
         let retLen = _getDemangledName(fixedName, &buf, bufLen)
 
         if retLen > 0 && retLen < bufLen {
@@ -33,7 +33,7 @@ extension SwiftDemangler {
         guard let type = _getTypeByMangledNameInContext(name, name.count, nil, nil) else {
             return name
         }
-        let typeName: String = String(describing: type)
+        let typeName = String(describing: type)
         return typeName
     }
 

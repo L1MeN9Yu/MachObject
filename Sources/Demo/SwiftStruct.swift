@@ -9,6 +9,6 @@ struct SwiftStruct {
 }
 
 extension SwiftStruct {
-    static let double: Double = Double.pi
+    static let double = Double.pi
     static let innerType = Inner.self
 }

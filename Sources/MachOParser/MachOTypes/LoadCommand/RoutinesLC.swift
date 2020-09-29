@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct RoutinesLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_ROUTINES)
+    public static let id = UInt32(LC_ROUTINES)
 
     public let initAddress: UInt32
     public let initModule: UInt32

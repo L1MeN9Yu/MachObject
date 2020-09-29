@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct LinkerOptionLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_LINKER_OPTION)
+    public static let id = UInt32(LC_LINKER_OPTION)
 
     public let count: UInt32
 

@@ -4,4 +4,4 @@
 
 import Foundation
 
-struct SwiftMeta { private init() {} }
+public enum SwiftMeta {}

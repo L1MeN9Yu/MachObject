@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct LoadDylibLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_LOAD_DYLIB)
+    public static let id = UInt32(LC_LOAD_DYLIB)
 
     public let name: String
     public let date: Date

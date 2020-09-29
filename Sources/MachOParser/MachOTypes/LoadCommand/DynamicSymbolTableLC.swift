@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct DynamicSymbolTableLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_DYSYMTAB)
+    public static let id = UInt32(LC_DYSYMTAB)
 
     public let localSymbolIndex: UInt32
     public let localSymbolCount: UInt32

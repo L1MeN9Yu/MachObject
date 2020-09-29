@@ -6,7 +6,7 @@ import Foundation
 import MachOParser
 
 extension SwiftMeta {
-    struct ProtocolType {
+    public struct ProtocolType {
         let raw: ProtocolDescriptor
         let offset: Int
         let name: String

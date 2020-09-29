@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct SubClientLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_SUB_CLIENT)
+    public static let id = UInt32(LC_SUB_CLIENT)
 
     public let client: String
 

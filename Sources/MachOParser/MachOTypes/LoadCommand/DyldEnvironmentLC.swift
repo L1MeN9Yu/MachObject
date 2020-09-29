@@ -7,7 +7,7 @@ import Foundation
 import MachO
 
 public struct DyldEnvironmentLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_DYLD_ENVIRONMENT)
+    public static let id = UInt32(LC_DYLD_ENVIRONMENT)
 
     public let name: String
 

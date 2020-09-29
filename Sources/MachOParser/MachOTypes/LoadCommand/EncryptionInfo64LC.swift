@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct EncryptionInfo64LC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_ENCRYPTION_INFO_64)
+    public static let id = UInt32(LC_ENCRYPTION_INFO_64)
 
     public let cryptOffset: UInt32
     public let cryptSize: UInt32

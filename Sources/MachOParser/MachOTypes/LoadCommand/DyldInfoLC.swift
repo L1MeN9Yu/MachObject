@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct DyldInfoLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_DYLD_INFO)
+    public static let id = UInt32(LC_DYLD_INFO)
 
     public let rebaseOffset: UInt32
     public let rebaseSize: UInt32

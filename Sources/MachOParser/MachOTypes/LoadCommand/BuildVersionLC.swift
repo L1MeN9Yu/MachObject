@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct BuildVersionLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_BUILD_VERSION)
+    public static let id = UInt32(LC_BUILD_VERSION)
     public let platform: Platform
     public let minos: Version
     public let sdk: Version

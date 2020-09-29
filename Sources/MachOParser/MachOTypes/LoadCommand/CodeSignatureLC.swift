@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct CodeSignatureLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_CODE_SIGNATURE)
+    public static let id = UInt32(LC_CODE_SIGNATURE)
 
     public let dataOffset: UInt32
     public let dataSize: UInt32

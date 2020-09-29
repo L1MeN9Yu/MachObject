@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct FixedVMFileLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_FVMFILE)
+    public static let id = UInt32(LC_FVMFILE)
 
     public let name: String
 

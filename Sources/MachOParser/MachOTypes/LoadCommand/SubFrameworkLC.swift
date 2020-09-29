@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct SubFrameworkLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_SUB_FRAMEWORK)
+    public static let id = UInt32(LC_SUB_FRAMEWORK)
 
     public let umbrella: String
 

@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct SourceVersionLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_SOURCE_VERSION)
+    public static let id = UInt32(LC_SOURCE_VERSION)
 
     let version: SourceVersion
 

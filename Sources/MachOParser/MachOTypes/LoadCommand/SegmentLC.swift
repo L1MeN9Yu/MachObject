@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct SegmentLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_SEGMENT)
+    public static let id = UInt32(LC_SEGMENT)
 
     public let segmentName: String
     public let vmAddress: UInt32 /* memory address of this segment */

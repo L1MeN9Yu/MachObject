@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct VersionMinWatchosLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_VERSION_MIN_WATCHOS)
+    public static let id = UInt32(LC_VERSION_MIN_WATCHOS)
 
     public let version: Version
     public let sdk: Version

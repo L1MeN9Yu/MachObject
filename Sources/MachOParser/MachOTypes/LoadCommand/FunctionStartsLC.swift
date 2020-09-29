@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct FunctionStartsLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_FUNCTION_STARTS)
+    public static let id = UInt32(LC_FUNCTION_STARTS)
 
     public let dataOffset: UInt32
     public let dataSize: UInt32

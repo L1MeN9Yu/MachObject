@@ -6,7 +6,7 @@ import Foundation
 import MachO
 
 public struct SymbolTableLC: LoadCommand {
-    public static let id: UInt32 = UInt32(LC_SYMTAB)
+    public static let id = UInt32(LC_SYMTAB)
 
     public let symbolTableOffset: UInt32
     public let numberOfSymbols: UInt32
