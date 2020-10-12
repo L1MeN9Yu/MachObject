@@ -74,6 +74,10 @@ public extension Mach {
 
     func loadCommand<T: LoadCommand>() -> T? { loadCommands()?.first }
 
+    var stringTable: StringTable? {
+        StringTable(mach: self)
+    }
+
     var exports: [String] {
         guard let dyldInfoOnlyLC: DyldInfoOnlyLC = loadCommand() else { return [] }
         let offset = Int(dyldInfoOnlyLC.exportOffset)

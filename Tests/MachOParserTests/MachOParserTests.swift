@@ -3,28 +3,25 @@ import Foundation
 import XCTest
 
 final class MachOParserTests: XCTestCase {
-//    func testSwiftProtocols() throws {
-//        let mach = try getMach()
-//        let protos = SwiftParser.parseProtos(mach: mach)
-//        print("\(protos)")
-//    }
-//
-//    func testSwiftTypes() throws {
-//        let mach = try getMach()
-//        SwiftParser.parseTypes(mach: mach)
-//    }
-
     func testEntitlements() throws {
         let mach = try getMach()
         CodeSignParser.parse(mach: mach)
     }
 
     func testExports() throws {
-        let mach = try getMach(path: "/Applications/MachOExplorer.app/Contents/Frameworks/MachOKit.framework/MachOKit")
+        let mach = try getMach()
         print(mach.exports)
     }
 
-    private func getMach(path: String = "/Applications/Visual Studio Code.app/Contents/MacOS/Electron") throws -> Mach {
+    func testStringTable() throws {
+        let mach = try getMach()
+        guard let symbols = mach.stringTable?.symbols else { return }
+        symbols.forEach {
+            print("0x\(String($0.offset, radix: 0x10, uppercase: true)) : \($0.value)")
+        }
+    }
+
+    private func getMach(path: String = "/Users/baal998/Downloads/archives/dynamic/Lagrange_Dynamic.xcframework/ios-arm64/Lagrange_Dynamic.framework/Lagrange_Dynamic") throws -> Mach {
         let image = try Image(url: URL(fileURLWithPath: path))
         switch image.content {
         case let .fat(fat):
