@@ -5,8 +5,8 @@
 import Foundation
 import MachO
 
-extension Section {
-    public enum Content {
+public extension Section {
+    enum Content {
         case raw(Common)
         case __Text__cstring(__Text__cstring)
         case __RODATA__cstring(__RODATA__cstring)

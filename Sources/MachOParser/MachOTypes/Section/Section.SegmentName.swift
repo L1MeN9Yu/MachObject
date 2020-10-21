@@ -5,8 +5,8 @@
 import Foundation
 import MachO
 
-extension Section {
-    public enum SegmentName {}
+public extension Section {
+    enum SegmentName {}
 }
 
 public extension Section.SegmentName {

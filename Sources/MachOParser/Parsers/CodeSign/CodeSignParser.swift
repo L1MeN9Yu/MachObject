@@ -2,19 +2,21 @@
 // Created by Mengyu Li on 2020/8/24.
 //
 
+import CodeSignParser
 import Foundation
 
-struct CodeSignParser { private init() {} }
+enum CodeSignParser {}
 
 extension CodeSignParser {
-    static func parse(mach: Mach) -> (Data?, Data?) {
-        // todo codeDirectoryData
-        let codeDirectoryData: Data? = nil
-        var entitlementsData: Data?
+    static func parse(mach: Mach) -> CodeSignature? {
         guard let codeSignatureLC: CodeSignatureLC = mach.loadCommand() else {
-            return (codeDirectoryData, entitlementsData)
+            return nil
         }
         let superBlob: SuperBlob = mach.data.get(atOffset: Int(codeSignatureLC.dataOffset))
+
+        var entitlementsString: String?
+        var codeDirectoryList = [CodeSignature.CodeDirectory]()
+        var cmsSignatureString: String?
 
         for index in 0..<superBlob.count.byteSwapped {
             let offset = codeSignatureLC.dataOffset + UInt32(MemoryLayout<SuperBlob>.size) + UInt32(MemoryLayout<BlobIndex>.size) * index
@@ -22,18 +24,65 @@ extension CodeSignParser {
             let slot = Slot(rawValue: blobIndex.type.byteSwapped)
             switch slot {
             case .codeDirectory:
-                break
+                let cd = codeDirectory(mach: mach, blobIndex: blobIndex, codeSignatureLC: codeSignatureLC)
+                codeDirectoryList.append(cd)
             case .entitlements:
-                let begin = blobIndex.offset.byteSwapped
-                let blobOffset = Int(begin + codeSignatureLC.dataOffset)
-                let blob: Blob = mach.data.get(atOffset: blobOffset)
-                let sub = mach.data.subdata(in: Range<Int>(offset: blobOffset + MemoryLayout<Blob>.size, count: Int(blob.length.byteSwapped) - MemoryLayout<Blob>.size))
-                entitlementsData = sub
+                entitlementsString = entitlements(mach: mach, blobIndex: blobIndex, codeSignatureLC: codeSignatureLC)
+            case .alternate:
+                let cd = codeDirectory(mach: mach, blobIndex: blobIndex, codeSignatureLC: codeSignatureLC)
+                codeDirectoryList.append(cd)
+            case .signature:
+                cmsSignatureString = cmsSignature(mach: mach, blobIndex: blobIndex, codeSignatureLC: codeSignatureLC)
             default:
                 break
             }
         }
-        return (codeDirectoryData, entitlementsData)
+        return CodeSignature(
+            entitlements: entitlementsString,
+            codeDirectoryList: codeDirectoryList,
+            cmsSignature: cmsSignatureString
+        )
+    }
+}
+
+private extension CodeSignParser {
+    static func codeDirectory(mach: Mach, blobIndex: BlobIndex, codeSignatureLC: CodeSignatureLC) -> CodeSignature.CodeDirectory {
+        let begin = blobIndex.offset.byteSwapped
+        let blobOffset = Int(begin + codeSignatureLC.dataOffset)
+        let codeDirectory: CodeDirectory = mach.data.get(atOffset: blobOffset)
+        let version = codeDirectory.version.byteSwapped
+        let hashOffset = codeDirectory.hashOffset.byteSwapped
+        let hashSize = codeDirectory.hashSize.byteSwapped
+        let hashType = codeDirectory.hashType.byteSwapped
+
+        let identOffset = Int(codeDirectory.identOffset.byteSwapped) + blobOffset
+        let ident = mach.data.get(atOffset: identOffset)
+        let teamOffset = Int(codeDirectory.teamOffset.byteSwapped) + blobOffset
+        let team = mach.data.get(atOffset: teamOffset)
+
+        return CodeSignature.CodeDirectory(
+            version: version,
+            ident: ident,
+            team: team,
+            hashType: hashType
+        )
+    }
+
+    static func entitlements(mach: Mach, blobIndex: BlobIndex, codeSignatureLC: CodeSignatureLC) -> String? {
+        let begin = blobIndex.offset.byteSwapped
+        let blobOffset = Int(begin + codeSignatureLC.dataOffset)
+        let blob: Blob = mach.data.get(atOffset: blobOffset)
+        let sub = mach.data.subdata(in: Range<Int>(offset: blobOffset + MemoryLayout<Blob>.size, count: Int(blob.length.byteSwapped) - MemoryLayout<Blob>.size))
+        return String(data: sub, encoding: .utf8)
+    }
+
+    static func cmsSignature(mach: Mach, blobIndex: BlobIndex, codeSignatureLC: CodeSignatureLC) -> String? {
+        let begin = blobIndex.offset.byteSwapped
+        let blobOffset = Int(begin + codeSignatureLC.dataOffset)
+        let blob: Blob = mach.data.get(atOffset: blobOffset)
+        let sub = mach.data.subdata(in: Range<Int>(offset: blobOffset + MemoryLayout<Blob>.size, count: Int(blob.length.byteSwapped) - MemoryLayout<Blob>.size))
+        guard let x509 = try? X509Certificate(data: sub) else { return nil }
+        return x509.description
     }
 }
 

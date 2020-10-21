@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MachOCLI" type="SwiftPackageManagerRunConfiguration" factoryName="Swift Package Run" PROGRAM_PARAMS="info $USER_HOME$/Desktop/KSAudioPlayerMac" REDIRECT_INPUT="false" ELEVATE="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="MachObject" TARGET_NAME="MachOCLI" CONFIG_NAME="Swift Package Run" RUN_TARGET_PROJECT_NAME="MachObject" RUN_TARGET_NAME="MachOCLI" WAS_MODIFIED="">
+    <method v="2">
+      <option name="SPM.BUILD_TASK_PROVIDER" enabled="true" />
+    </method>
+  </configuration>
+</component>

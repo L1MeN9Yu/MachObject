@@ -2,8 +2,8 @@
 // Created by Mengyu Li on 2020/9/29.
 //
 
-extension UnsafeRawPointer {
-    public mutating func readStringBytes() -> [UInt8] {
+public extension UnsafeRawPointer {
+    mutating func readStringBytes() -> [UInt8] {
         let basePtr = self
         while load(as: UInt8.self) != 0 { self = advanced(by: 1) }
         // skip terminal 0

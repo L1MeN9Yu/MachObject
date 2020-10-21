@@ -4,8 +4,8 @@
 
 import Foundation
 
-extension Mach {
-    public enum Error: Swift.Error {
+public extension Mach {
+    enum Error: Swift.Error {
         case magic(UInt32?)
     }
 }

@@ -2,17 +2,18 @@
 // Created by Mengyu Li on 2020/7/24.
 //
 
+import Darwin.Mach.machine
 import Foundation
 
-extension Mach {
-    public enum Header {
+public extension Mach {
+    enum Header {
         case _32(MachHeader32)
         case _64(MachHeader64)
     }
 }
 
 public extension Mach.Header {
-    var magic: UInt32 {
+    var rawMagic: UInt32 {
         switch self {
         case let ._32(header):
             return header.magic

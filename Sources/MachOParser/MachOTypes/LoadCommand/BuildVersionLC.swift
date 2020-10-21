@@ -26,8 +26,8 @@ public struct BuildVersionLC: LoadCommand {
     }
 }
 
-extension BuildVersionLC {
-    public enum Platform {
+public extension BuildVersionLC {
+    enum Platform {
         case macos
         case ios
         case tvos
@@ -69,8 +69,8 @@ extension BuildVersionLC {
     }
 }
 
-extension BuildVersionLC {
-    public enum BuildTool {
+public extension BuildVersionLC {
+    enum BuildTool {
         case clang
         case swift
         case ld
@@ -90,7 +90,7 @@ extension BuildVersionLC {
         }
     }
 
-    public struct BuildToolVersion {
+    struct BuildToolVersion {
         let tool: BuildTool
         let version: Version
 

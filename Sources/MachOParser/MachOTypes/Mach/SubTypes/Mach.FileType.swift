@@ -5,8 +5,8 @@
 import Foundation
 import MachO
 
-extension Mach {
-    public enum FileType {
+public extension Mach {
+    enum FileType {
         case object
         case execute
         case fvmlib

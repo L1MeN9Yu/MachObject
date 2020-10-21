@@ -5,8 +5,8 @@
 import Foundation
 import MachO
 
-extension Mach {
-    public enum CPUType {
+public extension Mach {
+    enum CPUType {
         case any
         case vax
         case mc680X0

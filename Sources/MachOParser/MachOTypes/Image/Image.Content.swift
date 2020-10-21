@@ -4,8 +4,8 @@
 
 import Foundation
 
-extension Image {
-    public enum Content {
+public extension Image {
+    enum Content {
         case fat(Fat)
         case mach(Mach)
     }

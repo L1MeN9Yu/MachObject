@@ -2,6 +2,7 @@
 // Created by Mengyu Li on 2020/7/23.
 //
 
+import CodeSignParser
 import Foundation
 import MachO
 
@@ -17,9 +18,9 @@ public struct Mach {
     public init(data: Data) throws {
         let magic = data.magic
         switch magic {
-        case MH_MAGIC:
+        case MH_MAGIC, MH_CIGAM:
             self.init(data32: data, swapped: magic == MH_CIGAM)
-        case MH_MAGIC_64:
+        case MH_MAGIC_64, MH_CIGAM_64:
             self.init(data64: data, swapped: magic == MH_CIGAM_64)
         default:
             throw Error.magic(magic)
@@ -68,7 +69,7 @@ public extension Mach {
 
     var flags: Set<MachHeaderFlag> { header.readableFlag }
 
-    var codeSignature: CodeSignature? { CodeSignature(tuple: CodeSignParser.parse(mach: self)) }
+    var codeSignature: CodeSignature? { CodeSignParser.parse(mach: self) }
 
     func loadCommands<T: LoadCommand>() -> [T]? { allLoadCommands.compactMap { $0 as? T } }
 

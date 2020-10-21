@@ -4,8 +4,8 @@
 
 import Foundation
 
-extension Section {
-    public struct Common: SectionContent {
+public extension Section {
+    struct Common: SectionContent {
         public typealias Value = Data
         public let value: Value
 

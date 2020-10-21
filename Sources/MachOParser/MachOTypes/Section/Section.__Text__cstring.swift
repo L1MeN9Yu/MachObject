@@ -4,8 +4,8 @@
 
 import Foundation
 
-extension Section {
-    public struct __Text__cstring: SectionContent {
+public extension Section {
+    struct __Text__cstring: SectionContent {
         public typealias Value = [String]
         public let value: Value
 

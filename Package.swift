@@ -11,12 +11,14 @@ let package = Package(
         .executable(name: "Demo", targets: ["Demo"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.2.0")),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.2.0"),
     ],
     targets: [
         .target(name: "MachCore"),
+        .target(name: "CodeSignParser"),
         .target(name: "MachOParser", dependencies: [
             .target(name: "MachCore"),
+            .target(name: "CodeSignParser"),
         ]),
         .target(name: "MachOSwiftParser", dependencies: [
             .target(name: "MachCore"),

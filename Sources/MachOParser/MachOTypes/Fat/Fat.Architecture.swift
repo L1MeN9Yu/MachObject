@@ -5,8 +5,8 @@
 import Foundation
 import MachO
 
-extension Fat {
-    public struct Architecture {
+public extension Fat {
+    struct Architecture {
         public let offset: UInt64
         public let mach: Mach
 

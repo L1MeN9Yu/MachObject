@@ -4,8 +4,8 @@
 
 import Foundation
 
-extension StringTable {
-    public struct Symbol {
+public extension StringTable {
+    struct Symbol {
         public let offset: Int
         public let value: String
     }
