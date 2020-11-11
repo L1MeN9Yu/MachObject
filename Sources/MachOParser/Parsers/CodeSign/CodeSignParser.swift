@@ -51,8 +51,8 @@ private extension CodeSignParser {
         let blobOffset = Int(begin + codeSignatureLC.dataOffset)
         let codeDirectory: CodeDirectory = mach.data.get(atOffset: blobOffset)
         let version = codeDirectory.version.byteSwapped
-        let hashOffset = codeDirectory.hashOffset.byteSwapped
-        let hashSize = codeDirectory.hashSize.byteSwapped
+//        let hashOffset = codeDirectory.hashOffset.byteSwapped
+//        let hashSize = codeDirectory.hashSize.byteSwapped
         let hashType = codeDirectory.hashType.byteSwapped
 
         let identOffset = Int(codeDirectory.identOffset.byteSwapped) + blobOffset
