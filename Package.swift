@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "MachOParser",
+    name: "MachObject",
     products: [
         .library(name: "MachOParser", targets: ["MachOParser"]),
         .library(name: "CodeSignParser", targets: ["CodeSignParser"]),
