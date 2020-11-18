@@ -69,7 +69,11 @@ public extension Mach {
 
     var flags: Set<MachHeaderFlag> { header.readableFlag }
 
-    var codeSignature: CodeSignature? { CodeSignParser.parse(mach: self) }
+    var codeSignature: CodeSignature? {
+        guard let codeSignatureLC: CodeSignatureLC = loadCommand() else { return nil }
+
+        return CodeSignature(machData: data, dataOffset: Int(codeSignatureLC.dataOffset))
+    }
 
     func loadCommands<T: LoadCommand>() -> [T]? { allLoadCommands.compactMap { $0 as? T } }
 

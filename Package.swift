@@ -7,15 +7,18 @@ let package = Package(
     name: "MachOParser",
     products: [
         .library(name: "MachOParser", targets: ["MachOParser"]),
+        .library(name: "CodeSignParser", targets: ["CodeSignParser"]),
         .executable(name: "MachOCLI", targets: ["MachOCLI"]),
         .executable(name: "Demo", targets: ["Demo"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.2.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.3.0"),
     ],
     targets: [
         .target(name: "MachCore"),
-        .target(name: "CodeSignParser"),
+        .target(name: "CodeSignParser", dependencies: [
+            .target(name: "MachCore"),
+        ]),
         .target(name: "MachOParser", dependencies: [
             .target(name: "MachCore"),
             .target(name: "CodeSignParser"),

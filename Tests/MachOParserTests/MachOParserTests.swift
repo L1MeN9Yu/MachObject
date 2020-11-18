@@ -1,11 +1,26 @@
+@testable import CodeSignParser
 import Foundation
 @testable import MachOParser
 import XCTest
 
 final class MachOParserTests: XCTestCase {
-    func testEntitlements() throws {
+    func testCodeSignature() throws {
         let mach = try getMach()
-        CodeSignParser.parse(mach: mach)
+        guard let codeSignature = mach.codeSignature else { return }
+        print("\(codeSignature.codeDirectoryList)")
+        if let entitlements = codeSignature.entitlements {
+            print("\(entitlements)")
+        }
+        print("==========================")
+        guard let codeSignatureLC: CodeSignatureLC = mach.loadCommand() else { return }
+        let offset = Int(codeSignatureLC.dataOffset)
+        let size = Int(codeSignatureLC.dataSize)
+        let subData = mach.data.subdata(in: offset..<(offset + size))
+        let codeSignature2 = CodeSignature(codeSignatureData: subData)
+        print("\(codeSignature2.codeDirectoryList)")
+        if let entitlements2 = codeSignature2.entitlements {
+            print("\(entitlements2)")
+        }
     }
 
     func testExports() throws {
@@ -21,7 +36,7 @@ final class MachOParserTests: XCTestCase {
         }
     }
 
-    private func getMach(path: String = "/Users/baal998/Downloads/archives/dynamic/Lagrange_Dynamic.xcframework/ios-arm64/Lagrange_Dynamic.framework/Lagrange_Dynamic") throws -> Mach {
+    private func getMach(path: String = "/Applications/Xcode.app/Contents/MacOS/Xcode") throws -> Mach {
         let image = try Image(url: URL(fileURLWithPath: path))
         switch image.content {
         case let .fat(fat):
@@ -37,6 +52,6 @@ final class MachOParserTests: XCTestCase {
     }
 
     static var allTests = [
-        ("testEntitlements", testEntitlements),
+        ("testCodeSignature", testCodeSignature),
     ]
 }
