@@ -26,6 +26,26 @@ extension MutableMach {
                 prefixes.contains(where: { prefix in string.starts(with: prefix) })
         }, mapping: { _ in replacement })
     }
+
+    mutating func eraseSymbolTable() throws {
+        let mach = try Mach(data: data)
+        guard let symtab: SymbolTableLC = mach.loadCommand() else { return }
+        let range = Range<UInt64>(offset: UInt64(symtab.stringTableOffset), count: UInt64(symtab.stringTableSize))
+        data.nullify(range: range.intRange)
+    }
+
+    mutating func eraseSwiftInfo() throws {
+        let mach = try Mach(data: data)
+        let sectionNames = [
+            "__swift5_typeref",
+            "__swift5_reflstr",
+        ]
+        sectionNames.compactMap {
+            mach.section(of: "__TEXT", name: $0)
+        }.forEach {
+            data.nullify(range: $0.range.intRange)
+        }
+    }
 }
 
 extension MutableMach {

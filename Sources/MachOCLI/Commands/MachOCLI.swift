@@ -11,7 +11,13 @@ struct MachOCLI: ParsableCommand {
         discussion: "The MachO Tool",
         version: "0.0.1",
         shouldDisplay: false,
-        subcommands: [Info.self, StripFilePath.self, ReplaceString.self],
+        subcommands: [
+            Info.self,
+            StripFilePath.self,
+            ReplaceString.self,
+            NullifySymbolTable.self,
+            NullifySwiftInfo.self,
+        ],
         defaultSubcommand: Info.self
     )
 }

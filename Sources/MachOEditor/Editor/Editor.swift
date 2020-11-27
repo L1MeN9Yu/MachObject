@@ -28,3 +28,25 @@ public extension Editor {
         return mutableImage.data
     }
 }
+
+public extension Editor {
+    static func eraseSymbolTable(macho url: URL) throws -> Data {
+        let image = try Image.load(url: url)
+        var mutableImage = MutableImage(image: image)
+        try mutableImage.update { (mach: inout MutableMach) in
+            try mach.eraseSymbolTable()
+        }
+        return mutableImage.data
+    }
+}
+
+public extension Editor {
+    static func eraseSwiftInfos(macho url: URL) throws -> Data {
+        let image = try Image.load(url: url)
+        var mutableImage = MutableImage(image: image)
+        try mutableImage.update { (mach: inout MutableMach) in
+            try mach.eraseSwiftInfo()
+        }
+        return mutableImage.data
+    }
+}
