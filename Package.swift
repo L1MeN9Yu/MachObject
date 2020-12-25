@@ -23,6 +23,10 @@ let package = Package(
             .target(name: "MachCore"),
             .target(name: "CodeSignParser"),
         ]),
+        .target(name: "MachOObjcParser", dependencies: [
+            .target(name: "MachCore"),
+            .target(name: "MachOParser"),
+        ]),
         .target(name: "MachOSwiftParser", dependencies: [
             .target(name: "MachCore"),
             .target(name: "MachOParser"),
@@ -33,6 +37,7 @@ let package = Package(
             .target(name: "MachCore"),
             .target(name: "MachOParser"),
             .target(name: "MachOSwiftParser"),
+            .target(name: "MachOObjcParser"),
         ]),
         .target(name: "MachOCLI", dependencies: [
             .target(name: "MachOEditor"),
