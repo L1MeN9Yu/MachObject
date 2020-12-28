@@ -3,8 +3,9 @@
 //
 
 import Foundation
+import MachOParser
 
 enum Error: Swift.Error {
     case replaceStringLength
-    case sectionNotFound(name: String)
+    case sectionNotFound(name: SegmentName)
 }

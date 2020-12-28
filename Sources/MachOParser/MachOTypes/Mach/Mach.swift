@@ -69,11 +69,26 @@ private extension Mach {
 }
 
 public extension Mach {
+    func section(of segmentName: SegmentName, name: SectionName) -> Section? {
+        var mutableSelf = self
+        return mutableSelf.sections.first { (section: Section) -> Bool in
+            section.segmentName == segmentName && section.name == name
+        }
+    }
+
     func section(of segmentName: String, name: String) -> Section? {
         var mutableSelf = self
         return mutableSelf.sections.first { (section: Section) -> Bool in
             section.segmentName == segmentName && section.name == name
         }
+    }
+
+    func sectionContent<T: SectionContent>() -> T? {
+        var mutableSelf = self
+        guard let section = (mutableSelf.sections.first {
+            $0.segmentName == T.segmentName && $0.name == T.sectionName
+        }) else { return nil }
+        return T(machoData: data, range: section.range)
     }
 }
 

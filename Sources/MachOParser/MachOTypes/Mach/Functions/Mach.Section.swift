@@ -9,13 +9,14 @@ public extension Mach {
     var cStrings: [String] {
         var mutableSelf = self
         return mutableSelf.sections.reduce(into: [String]()) { (result: inout [String], section: Section) in
-            switch section.content {
-            case .raw:
-                return
-            case let .__Text__cstring(content):
-                result.append(contentsOf: content.value)
-            case let .__RODATA__cstring(content):
-                result.append(contentsOf: content.value)
+            if section.segmentName == SegmentName.__TEXT && section.segmentName == SectionName.__cstring {
+                let cstring = Section.__Text__cstring(machoData: data, range: section.range)
+                result.append(contentsOf: cstring.value)
+            }
+
+            if section.segmentName == SegmentName.__RODATA && section.segmentName == SectionName.__cstring {
+                let cstring = Section.__Text__cstring(machoData: data, range: section.range)
+                result.append(contentsOf: cstring.value)
             }
         }
     }

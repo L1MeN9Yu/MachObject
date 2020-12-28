@@ -8,4 +8,7 @@ public protocol SectionContent {
     associatedtype Value
     var value: Value { get }
     init(machoData: Data, range: Range<UInt64>)
+
+    static var segmentName: SegmentName { get }
+    static var sectionName: SectionName { get }
 }

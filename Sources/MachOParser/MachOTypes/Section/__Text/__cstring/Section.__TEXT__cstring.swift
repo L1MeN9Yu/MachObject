@@ -14,5 +14,9 @@ public extension Section {
                 String(bytes: sequence, encoding: .utf8)
             }
         }
+
+        public static var segmentName: SegmentName = .__TEXT
+
+        public static var sectionName: SectionName = .__cstring
     }
 }

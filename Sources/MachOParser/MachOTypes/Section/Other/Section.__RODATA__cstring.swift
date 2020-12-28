@@ -15,5 +15,8 @@ public extension Section {
                 String(bytes: sequence, encoding: .utf8)
             }
         }
+
+        public static let segmentName: SegmentName = .__RODATA
+        public static let sectionName: SectionName = .__cstring
     }
 }

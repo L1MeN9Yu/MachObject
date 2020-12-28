@@ -10,7 +10,6 @@ public struct Section {
     public let name: String
     public let segmentName: String
     public let range: Range<UInt64>
-    public let content: Content
     public let align: UInt64 // power(2,sectionHeader align)
     public let count: UInt64
 
@@ -18,7 +17,6 @@ public struct Section {
         name = sectionHeader.sectionName
         range = Range<UInt64>(offset: UInt64(sectionHeader.offset), count: UInt64(sectionHeader.size))
         segmentName = sectionHeader.segmentName
-        content = Content(segmentName: segmentName, name: name, machoData: machoData, range: range)
         align = UInt64(pow(CGFloat(2), CGFloat(sectionHeader.align)))
         count = UInt64(sectionHeader.size) / align
     }
@@ -27,8 +25,13 @@ public struct Section {
         name = sectionHeader.sectionName
         range = Range<UInt64>(offset: UInt64(sectionHeader.offset), count: sectionHeader.size)
         segmentName = sectionHeader.segmentName
-        content = Content(segmentName: segmentName, name: name, machoData: machoData, range: range)
         align = UInt64(pow(CGFloat(2), CGFloat(sectionHeader.align)))
         count = sectionHeader.size / align
+    }
+}
+
+public extension Section {
+    func content<T: SectionContent>(machData: Data) -> T {
+        T(machoData: machData, range: range)
     }
 }

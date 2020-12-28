@@ -24,7 +24,7 @@ private extension SwiftParser {
 public extension SwiftParser {
     static func parseProtos(mach: Mach) -> [SwiftMeta.ProtocolType] {
         var protocols = [SwiftMeta.ProtocolType]()
-        guard let protosSection = mach.section(of: Section.SegmentName.__TEXT, name: Section.Name.__swift5_protos) else {
+        guard let protosSection = mach.section(of: SegmentName.__TEXT, name: SectionName.__swift5_protos) else {
             return protocols
         }
 
@@ -57,7 +57,7 @@ public extension SwiftParser {
     }
 
     static func parseTypes(mach: Mach) {
-        guard let typesSection = mach.section(of: Section.SegmentName.__TEXT, name: Section.Name.__swift5_types) else {
+        guard let typesSection = mach.section(of: SegmentName.__TEXT, name: SectionName.__swift5_types) else {
             return
         }
         for index in 0..<typesSection.count {
