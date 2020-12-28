@@ -13,7 +13,23 @@ public struct Mach {
     public let swapped: Bool
     public let header: Header
     public let allLoadCommands: [LoadCommand]
-    public let sections: [Section]
+    public private(set) lazy var segments: [Segment] = {
+        var segments = [Segment]()
+        if let segmentLCList: [SegmentLC] = loadCommands() {
+            segments.append(contentsOf: segmentLCList.map { Segment(machData: data, segmentLC: $0) })
+        }
+        if let segment64LCList: [Segment64LC] = loadCommands() {
+            segments.append(contentsOf: segment64LCList.map { Segment(machData: data, segment64LC: $0) })
+        }
+
+        return segments
+    }()
+
+    public private(set) lazy var sections: [Section] = {
+        segments.reduce([Section]()) { (result: [Section], segment: Segment) in
+            result + segment.sections
+        }
+    }()
 
     public init(data: Data) throws {
         let magic = data.magic
@@ -37,7 +53,7 @@ private extension Mach {
         allLoadCommands = Self.parseLoadCommand(
             data: data32, count: header.ncmds, headerSize: MemoryLayout<mach_header>.size
         )
-        sections = Self.parseSections(loadCommands: allLoadCommands, machoData: data32)
+//        sections = Self.parseSections(loadCommands: allLoadCommands, machoData: data32)
     }
 
     init(data64: Data, swapped: Bool) {
@@ -48,13 +64,14 @@ private extension Mach {
         allLoadCommands = Self.parseLoadCommand(
             data: data64, count: header.ncmds, headerSize: MemoryLayout<mach_header_64>.size
         )
-        sections = Self.parseSections(loadCommands: allLoadCommands, machoData: data64)
+//        sections = Self.parseSections(loadCommands: allLoadCommands, machoData: data64)
     }
 }
 
 public extension Mach {
     func section(of segmentName: String, name: String) -> Section? {
-        sections.first { (section: Section) -> Bool in
+        var self = self
+        return self.sections.first { (section: Section) -> Bool in
             section.segmentName == segmentName && section.name == name
         }
     }
