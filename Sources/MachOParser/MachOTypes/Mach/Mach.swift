@@ -70,8 +70,8 @@ private extension Mach {
 
 public extension Mach {
     func section(of segmentName: String, name: String) -> Section? {
-        var self = self
-        return self.sections.first { (section: Section) -> Bool in
+        var mutableSelf = self
+        return mutableSelf.sections.first { (section: Section) -> Bool in
             section.segmentName == segmentName && section.name == name
         }
     }

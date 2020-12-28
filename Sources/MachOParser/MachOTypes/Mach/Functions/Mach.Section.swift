@@ -7,8 +7,8 @@ import MachO
 
 public extension Mach {
     var cStrings: [String] {
-        var self = self
-        return self.sections.reduce(into: [String]()) { (result: inout [String], section: Section) in
+        var mutableSelf = self
+        return mutableSelf.sections.reduce(into: [String]()) { (result: inout [String], section: Section) in
             switch section.content {
             case .raw:
                 return

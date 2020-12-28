@@ -7,8 +7,8 @@ import MachOParser
 
 extension Mach {
     func fileOffset<I: UnsignedInteger>(fromVmOffset vmOffset: I) -> Int {
-        var self = self
-        guard let segment = segments.first(where: { $0.vmRange.contains(UInt64(vmOffset)) }) else {
+        var mutableSelf = self
+        guard let segment = mutableSelf.segments.first(where: { $0.vmRange.contains(UInt64(vmOffset)) }) else {
             fatalError("vmOffset \(vmOffset) does not exist in the image")
         }
 
