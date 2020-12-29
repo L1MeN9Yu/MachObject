@@ -33,3 +33,14 @@ public extension Image {
         try Image(url: url)
     }
 }
+
+public extension Image {
+    func eachMach(block: (Mach) -> ()) {
+        switch content {
+        case let .fat(fat):
+            fat.architectures.forEach { block($0.mach) }
+        case let .mach(mach):
+            block(mach)
+        }
+    }
+}

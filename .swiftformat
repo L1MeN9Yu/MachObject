@@ -6,4 +6,4 @@
 --ifdef noindent
 --stripunusedargs closure-only
 --disable andOperator
---swiftversion 5.2
+--swiftversion 5.3

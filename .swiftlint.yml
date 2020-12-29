@@ -10,6 +10,9 @@ disabled_rules:
   - todo
   - large_tuple
 
+opt_in_rules:
+  - indentation_width
+
 line_length: 120
 
 indentation_width: 4

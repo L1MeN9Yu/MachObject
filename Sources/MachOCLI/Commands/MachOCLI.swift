@@ -17,6 +17,7 @@ struct MachOCLI: ParsableCommand {
             ReplaceString.self,
             NullifySymbolTable.self,
             NullifySwiftInfo.self,
+            ObfuscateObjc.self,
         ],
         defaultSubcommand: Info.self
     )

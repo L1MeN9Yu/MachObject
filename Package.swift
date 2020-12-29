@@ -9,7 +9,6 @@ let package = Package(
         .library(name: "MachOParser", targets: ["MachOParser"]),
         .library(name: "CodeSignParser", targets: ["CodeSignParser"]),
         .executable(name: "MachOCLI", targets: ["MachOCLI"]),
-        .executable(name: "Demo", targets: ["Demo"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "0.3.0"),
@@ -27,6 +26,10 @@ let package = Package(
             .target(name: "MachCore"),
             .target(name: "MachOParser"),
         ]),
+        .target(name: "ObjCObfuscation", dependencies: [
+            .target(name: "MachCore"),
+            .target(name: "MachOParser"),
+        ]),
         .target(name: "MachOSwiftParser", dependencies: [
             .target(name: "MachCore"),
             .target(name: "MachOParser"),
@@ -38,12 +41,12 @@ let package = Package(
             .target(name: "MachOParser"),
             .target(name: "MachOSwiftParser"),
             .target(name: "MachOObjcParser"),
+            .target(name: "ObjCObfuscation"),
         ]),
         .target(name: "MachOCLI", dependencies: [
             .target(name: "MachOEditor"),
             .product(name: "ArgumentParser", package: "swift-argument-parser"),
         ]),
-        .target(name: "Demo"),
         .testTarget(name: "MachOEditorTests", dependencies: ["MachOEditor"]),
         .testTarget(name: "MachOParserTests", dependencies: ["MachOParser"]),
     ]

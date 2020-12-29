@@ -5,11 +5,11 @@
 import Foundation
 @_implementationOnly import MachCore
 
-struct Trie {
-    let exportsSymbol: Bool
-    let labelRange: Range<UInt64>
-    let label: [UInt8]
-    let children: [Trie]
+public struct Trie {
+    public let exportsSymbol: Bool
+    public let labelRange: Range<UInt64>
+    public private(set) var label: [UInt8]
+    public private(set) var children: [Trie]
 
     init(data: Data, rootNodeOffset: Int) {
         self.init(data: data, rootNodeOffset: rootNodeOffset, nodeOffset: rootNodeOffset, label: [], labelRange: 0..<0)
@@ -51,6 +51,48 @@ extension Trie {
             return [label] + childrenLabels
         } else {
             return childrenLabels
+        }
+    }
+
+    var flatNodes: [Trie] {
+        var result = [self]
+        var queue = [self]
+        while let nextNode = queue.popLast() {
+            let children = nextNode.children
+            result += children
+            queue += children
+        }
+        return result
+    }
+}
+
+public extension Trie {
+    struct FillResult {
+        public var finalFillValue: UInt8
+    }
+
+    @discardableResult
+    mutating func fillRecursively(startingWithFillValue initialFillValue: UInt8, minimumFillValue: UInt8) -> FillResult {
+        label = Array(repeating: initialFillValue, count: label.count)
+        var childFillValue = label.isEmpty
+            ? initialFillValue // children won't get any prefix from their parent, need to iterate the parent's fillValue
+            : minimumFillValue // children are safe to be filled with independent enumeration
+        for childIdx in children.indices {
+            let fillResult = children[childIdx].fillRecursively(startingWithFillValue: childFillValue,
+                                                                minimumFillValue: minimumFillValue)
+            childFillValue = fillResult.finalFillValue // child decides about syncing the iterator back
+        }
+
+        if label.isEmpty {
+            // need to sync parent fillValue iterator back
+            return FillResult(finalFillValue: childFillValue)
+        } else {
+            // children use independent iteration, just increment parent's fillValue iterator
+            let addResult = initialFillValue.addingReportingOverflow(1)
+            guard !addResult.overflow else {
+                fatalError("Trie label values probably exhausted at \(labelRange)")
+            }
+            return FillResult(finalFillValue: addResult.partialValue)
         }
     }
 }
