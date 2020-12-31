@@ -48,6 +48,24 @@ public extension Mach {
     }
 }
 
+public extension Mach {
+    var classNamesInData: [MangledObjcClassNameInData] {
+        (objcClasses.map(\.name) + objcProtocols.map(\.name)).filter { !$0.isSwift } + pureObjcCategoryNames
+    }
+
+    var classNames: [String] {
+        classNamesInData.map(\.value)
+    }
+
+    private var pureObjcCategoryNames: [MangledObjcClassNameInData] {
+        objcCategories.map(\.name).filter(isPureObjCCategory(_:))
+    }
+
+    func isPureObjCCategory(_ name: MangledObjcClassNameInData) -> Bool {
+        section(of: .__TEXT, name: .__objc_classname)?.contains(data: name) ?? false
+    }
+}
+
 private class Mach32: MachArchitecture<Mach32.PointerType, Mach32>, ObjcArchitecture32 {}
 
 private class Mach64: MachArchitecture<Mach64.PointerType, Mach64>, ObjcArchitecture64 {}

@@ -12,9 +12,9 @@ public struct DyldInfoLC: LoadCommand {
     public let rebaseSize: UInt32
     public let bindOffset: UInt32
     public let bindSize: UInt32
-    public let weakBindOff: UInt32
+    public let weakBindOffset: UInt32
     public let weakBindSize: UInt32
-    public let lazyBindOff: UInt32
+    public let lazyBindOffset: UInt32
     public let lazyBindSize: UInt32
     public let exportOffset: UInt32
     public let exportSize: UInt32
@@ -25,9 +25,9 @@ public struct DyldInfoLC: LoadCommand {
         rebaseSize = command.rebase_size
         bindOffset = command.bind_off
         bindSize = command.bind_size
-        weakBindOff = command.weak_bind_off
+        weakBindOffset = command.weak_bind_off
         weakBindSize = command.weak_bind_size
-        lazyBindOff = command.lazy_bind_off
+        lazyBindOffset = command.lazy_bind_off
         lazyBindSize = command.lazy_bind_size
         exportOffset = command.export_off
         exportSize = command.export_size

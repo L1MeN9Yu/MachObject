@@ -41,11 +41,11 @@ public extension Editor {
 }
 
 public extension Editor {
-    static func eraseSwiftInfos(macho url: URL) throws -> Data {
+    static func obfuscateObjC(mach url: URL) throws -> Data {
         let image = try Image.load(url: url)
         var mutableImage = MutableImage(image: image)
         try mutableImage.update { (mach: inout MutableMach) in
-            try mach.eraseSwiftInfo()
+            try mach.obfuscateObjC()
         }
         return mutableImage.data
     }

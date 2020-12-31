@@ -45,4 +45,9 @@ extension Data {
         assert(range.count == targetDataWithPadding.count)
         replaceSubrange(range, with: targetDataWithPadding)
     }
+
+    mutating func replaceWithPadding(range: Range<Int>, string: String) {
+        guard let data = string.data(using: .utf8) else { fatalError() }
+        replaceWithPadding(range: range, data: data)
+    }
 }

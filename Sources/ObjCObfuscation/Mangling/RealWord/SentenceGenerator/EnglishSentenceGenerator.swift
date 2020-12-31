@@ -40,17 +40,13 @@ final class EnglishSentenceGenerator: SentenceGenerator {
 
 private extension Array {
     var random: Element? {
-        guard !isEmpty else {
-            return nil
-        }
+        guard !isEmpty else { return nil }
         return self[count.random]
     }
 }
 
 private extension Int {
-    var random: Int {
-        Int(arc4random_uniform(UInt32(self)))
-    }
+    var random: Int { Int(arc4random_uniform(UInt32(self))) }
 }
 
 private extension Words {

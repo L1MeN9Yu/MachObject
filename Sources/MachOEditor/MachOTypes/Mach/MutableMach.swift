@@ -3,7 +3,9 @@
 //
 
 import Foundation
+import LogMan
 @_implementationOnly import MachCore
+import MachOObjcParser
 import MachOParser
 
 struct MutableMach {
@@ -33,19 +35,6 @@ extension MutableMach {
         let range = Range<UInt64>(offset: UInt64(symtab.stringTableOffset), count: UInt64(symtab.stringTableSize))
         data.nullify(range: range.intRange)
     }
-
-    mutating func eraseSwiftInfo() throws {
-        let mach = try Mach(data: data)
-        let sectionNames = [
-            "__swift5_typeref",
-            "__swift5_reflstr",
-        ]
-        sectionNames.compactMap {
-            mach.section(of: "__TEXT", name: $0)
-        }.forEach {
-            data.nullify(range: $0.range.intRange)
-        }
-    }
 }
 
 extension MutableMach {
@@ -72,5 +61,48 @@ extension MutableMach {
             filter: filter,
             mapping: mapping
         )
+    }
+}
+
+extension MutableMach {
+    static let AAA = "YDDictWord"
+
+    mutating func obfuscateObjC() throws {
+        let mach = try Mach(data: data)
+
+        if let methTypeSection = mach.section(of: .__TEXT, name: .__objc_methtype) {
+            data.replaceString(range: methTypeSection.range.intRange) { original in
+                if original.contains(Self.AAA) {
+                    let target = original.replacingOccurrences(of: "YD", with: "DY")
+                    logger.debug("\(original) => \(target)")
+                    return target
+                }
+                return original
+            }
+        }
+
+        mach.objcClasses
+            .flatMap(\.properties)
+            .forEach { (property: ObjcProperty) in
+                var attrs = property.attributeValues
+                let typename = property.typeAttribute
+                if typename.contains(Self.AAA) {
+                    logger.debug("attrs:\(attrs) => \(typename)")
+                    let newTypename = typename.replacingOccurrences(of: "YD", with: "DY")
+                    attrs[0] = newTypename
+                    let newAttrsString = attrs.joined(separator: ",")
+                    data.replaceWithPadding(range: property.attributes.range, string: newAttrsString)
+                }
+            }
+
+        let classNamesInData = mach.classNamesInData
+        classNamesInData.forEach { (mangledObjcClassNameInData: MangledObjcClassNameInData) in
+            let original = mangledObjcClassNameInData.value
+            if original.hasPrefix(Self.AAA) {
+                let target = "DY\(original[original.index(original.startIndex, offsetBy: 2)..<original.endIndex])"
+                logger.info("\(original) => \(target)")
+                data.replaceWithPadding(range: mangledObjcClassNameInData.range, string: target)
+            }
+        }
     }
 }

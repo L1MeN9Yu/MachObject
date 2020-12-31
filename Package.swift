@@ -12,9 +12,18 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "0.3.0"),
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.4.0"),
+        .package(url: "https://github.com/L1MeN9Yu/Senna.git", from: "2.1.4"),
     ],
     targets: [
         .target(name: "MachCore"),
+        .target(name: "LogMan", dependencies: [
+            .product(name: "Logging", package: "swift-log"),
+            .product(name: "Senna", package: "Senna"),
+        ]),
+        .target(name: "Measure", dependencies: [
+            .target(name: "LogMan"),
+        ]),
         .target(name: "CodeSignParser", dependencies: [
             .target(name: "MachCore"),
         ]),
@@ -42,6 +51,7 @@ let package = Package(
             .target(name: "MachOSwiftParser"),
             .target(name: "MachOObjcParser"),
             .target(name: "ObjCObfuscation"),
+            .target(name: "LogMan"),
         ]),
         .target(name: "MachOCLI", dependencies: [
             .target(name: "MachOEditor"),

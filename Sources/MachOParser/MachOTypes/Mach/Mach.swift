@@ -53,7 +53,6 @@ private extension Mach {
         allLoadCommands = Self.parseLoadCommand(
             data: data32, count: header.ncmds, headerSize: MemoryLayout<mach_header>.size
         )
-//        sections = Self.parseSections(loadCommands: allLoadCommands, machoData: data32)
     }
 
     init(data64: Data, swapped: Bool) {
@@ -64,7 +63,6 @@ private extension Mach {
         allLoadCommands = Self.parseLoadCommand(
             data: data64, count: header.ncmds, headerSize: MemoryLayout<mach_header_64>.size
         )
-//        sections = Self.parseSections(loadCommands: allLoadCommands, machoData: data64)
     }
 }
 
@@ -120,5 +118,34 @@ public extension Mach {
         let offset = Int(dyldInfoOnlyLC.exportOffset)
         let trie = Trie(data: data, rootNodeOffset: offset)
         return trie.exportedLabelStrings
+    }
+
+    var dyldInfo: DyldInfo? {
+        if let dyldInfoOnlyLC: DyldInfoOnlyLC = loadCommand() {
+            return DyldInfo(dyldInfoOnlyLC: dyldInfoOnlyLC)
+        }
+
+        if let dyldInfoLC: DyldInfoLC = loadCommand() {
+            return DyldInfo(dyldInfoLC: dyldInfoLC)
+        }
+        return nil
+    }
+
+    var importStack: ImportStack {
+        guard let dyldInfo = dyldInfo else { return [] }
+
+        var importStack = ImportStack()
+
+        if !dyldInfo.bind.isEmpty {
+            importStack.add(opcodesData: data, range: dyldInfo.bind.intRange, weakly: false)
+        }
+        if !dyldInfo.weakBind.isEmpty {
+            importStack.add(opcodesData: data, range: dyldInfo.weakBind.intRange, weakly: true)
+        }
+        if !dyldInfo.lazyBind.isEmpty {
+            importStack.add(opcodesData: data, range: dyldInfo.lazyBind.intRange, weakly: false)
+        }
+        importStack.resolveMissingDylibOrdinals()
+        return importStack
     }
 }

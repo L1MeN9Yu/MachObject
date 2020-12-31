@@ -4,6 +4,7 @@
 
 import ArgumentParser
 import Foundation
+import MachOObjcParser
 import MachOParser
 
 struct Info: ParsableCommand {
@@ -56,5 +57,20 @@ private extension Info {
         guard let codeSignature = mach.codeSignature else { return }
         print("code signature ====>>")
         print("\(codeSignature)")
+    }
+}
+
+private extension Info {
+    func showObjCClassList(mach: Mach) {
+        let objcClassList = mach.objcClasses
+        objcClassList.forEach { (objcClass: ObjcClass) in
+            print("\(objcClass)")
+        }
+    }
+
+    func showImportStack(mach: Mach) {
+        mach.importStack.forEach {
+            print("\($0.symbolString)")
+        }
     }
 }
