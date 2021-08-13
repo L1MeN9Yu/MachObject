@@ -2,6 +2,7 @@
 // Created by Mengyu Li on 2021/8/13.
 //
 
+import CodeSignParser
 import struct MachO.loader.mach_header
 import struct MachO.loader.mach_header_64
 import var MachO.loader.MH_CIGAM
@@ -41,5 +42,19 @@ private extension ProcessMach {
         header = ._64(MachHeader64(header: headerPointer.pointee))
 
         allLoadCommands = Self.parseLoadCommands(startPointer: pointer.advanced(by: header.rawTypeStride), count: header.commandCount)
+    }
+}
+
+public extension ProcessMach {
+    func loadCommands<T: LoadCommand>() -> [T]? { allLoadCommands.compactMap { $0 as? T } }
+
+    func loadCommand<T: LoadCommand>() -> T? { loadCommands()?.first }
+}
+
+public extension ProcessMach {
+    var codeSignature: CodeSignature? {
+        guard let codeSignatureLC: CodeSignatureLC = loadCommand() else { return nil }
+
+        return CodeSignature(machPointer: pointer, offset: Int(codeSignatureLC.dataOffset))
     }
 }

@@ -65,6 +65,8 @@ extension MachOParserTests {
 
         let processMach = try ProcessMach(headerPointer: headerFromDyld)
         print("\(processMach.header)")
-        print("\(processMach.allLoadCommands)")
+        if let codeSign = processMach.codeSignature {
+            print("\(codeSign)")
+        }
     }
 }

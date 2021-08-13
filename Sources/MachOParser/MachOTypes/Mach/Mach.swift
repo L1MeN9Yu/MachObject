@@ -102,7 +102,7 @@ public extension Mach {
     var codeSignature: CodeSignature? {
         guard let codeSignatureLC: CodeSignatureLC = loadCommand() else { return nil }
 
-        return CodeSignature(machData: data, dataOffset: Int(codeSignatureLC.dataOffset))
+        return CodeSignature(machData: data, offset: Int(codeSignatureLC.dataOffset))
     }
 
     func loadCommands<T: LoadCommand>() -> [T]? { allLoadCommands.compactMap { $0 as? T } }
