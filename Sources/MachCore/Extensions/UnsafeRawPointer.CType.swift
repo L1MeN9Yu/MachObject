@@ -4,7 +4,7 @@
 
 import Foundation
 
-extension UnsafeRawPointer {
+public extension UnsafeRawPointer {
     func get<T>() -> T {
         bindMemory(to: T.self, capacity: 1).pointee
     }
@@ -16,7 +16,7 @@ extension UnsafeRawPointer {
     }
 }
 
-extension UnsafeRawPointer {
+public extension UnsafeRawPointer {
     mutating func read<T>() -> T {
         defer {
             // TODO: size?

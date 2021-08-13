@@ -13,6 +13,17 @@ public struct VersionMinWatchosLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: version_min_command = machData.get(atOffset: offset)
+        self.init(command: command)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: version_min_command = pointer.get()
+        self.init(command: command)
+    }
+}
+
+private extension VersionMinWatchosLC {
+    init(command: version_min_command) {
         version = Version(machVersion: command.version)
         sdk = Version(machVersion: command.sdk)
     }

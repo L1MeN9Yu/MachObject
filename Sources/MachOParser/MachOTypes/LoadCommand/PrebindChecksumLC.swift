@@ -11,6 +11,17 @@ public struct PrebindChecksumLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: prebind_cksum_command = machData.get(atOffset: offset)
+        self.init(command: command)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: prebind_cksum_command = pointer.get()
+        self.init(command: command)
+    }
+}
+
+private extension PrebindChecksumLC {
+    init(command: prebind_cksum_command) {
         checkSum = command.cksum
     }
 }

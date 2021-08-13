@@ -13,6 +13,17 @@ public struct MainLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: entry_point_command = machData.get(atOffset: offset)
+        self.init(command: command)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: entry_point_command = pointer.get()
+        self.init(command: command)
+    }
+}
+
+private extension MainLC {
+    init(command: entry_point_command) {
         entryOffset = command.entryoff
         stackSize = command.stacksize
     }

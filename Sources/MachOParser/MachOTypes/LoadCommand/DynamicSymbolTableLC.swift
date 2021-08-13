@@ -29,6 +29,17 @@ public struct DynamicSymbolTableLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: dysymtab_command = machData.get(atOffset: offset)
+        self.init(command: command)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: dysymtab_command = pointer.get()
+        self.init(command: command)
+    }
+}
+
+private extension DynamicSymbolTableLC {
+    init(command: dysymtab_command) {
         localSymbolIndex = command.ilocalsym
         localSymbolCount = command.nlocalsym
         definedExternalSymbolIndex = command.iextdefsym

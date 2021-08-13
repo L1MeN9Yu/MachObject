@@ -13,6 +13,17 @@ public struct UUIDLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: uuid_command = machData.get(atOffset: offset)
+        self.init(command: command)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: uuid_command = pointer.get()
+        self.init(command: command)
+    }
+}
+
+private extension UUIDLC {
+    init(command: uuid_command) {
         uuid = UUID(uuid: command.uuid)
     }
 }

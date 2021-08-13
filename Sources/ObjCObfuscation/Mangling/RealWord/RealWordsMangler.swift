@@ -69,7 +69,7 @@ private extension ObfuscationSymbols {
         }
         return whiteList
             .selectors
-            .filter { $0.isSetter }
+            .filter(\.isSetter)
             .compactMap(setterManglingEntryProvider)
     }
 

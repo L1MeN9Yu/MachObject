@@ -21,6 +21,17 @@ public struct DyldInfoLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: dyld_info_command = machData.get(atOffset: offset)
+        self.init(command: command)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: dyld_info_command = pointer.get()
+        self.init(command: command)
+    }
+}
+
+private extension DyldInfoLC {
+    init(command: dyld_info_command) {
         rebaseOffset = command.rebase_off
         rebaseSize = command.rebase_size
         bindOffset = command.bind_off

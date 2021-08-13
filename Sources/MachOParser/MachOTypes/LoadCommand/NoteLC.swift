@@ -13,7 +13,18 @@ public struct NoteLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: note_command = machData.get(atOffset: offset)
-        owner = String(bytesTuple: command.data_owner)
+        self.init(command: command)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: note_command = pointer.get()
+        self.init(command: command)
+    }
+}
+
+private extension NoteLC {
+    init(command: note_command) {
+        owner = String(tuple16: command.data_owner)
         fileOffset = command.offset
         fileSize = command.size
     }

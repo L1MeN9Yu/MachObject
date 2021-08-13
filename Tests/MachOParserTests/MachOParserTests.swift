@@ -1,5 +1,6 @@
 @testable import CodeSignParser
 import Foundation
+import MachO
 @testable import MachOParser
 import XCTest
 
@@ -54,4 +55,16 @@ final class MachOParserTests: XCTestCase {
     static var allTests = [
         ("testCodeSignature", testCodeSignature),
     ]
+}
+
+extension MachOParserTests {
+    func testProcessMach() throws {
+        guard let headerFromDyld: UnsafePointer<mach_header> = _dyld_get_image_header(0) else {
+            fatalError()
+        }
+
+        let processMach = try ProcessMach(headerPointer: headerFromDyld)
+        print("\(processMach.header)")
+        print("\(processMach.allLoadCommands)")
+    }
 }

@@ -24,3 +24,9 @@ public struct MachHeader32 {
         flags = header.flags
     }
 }
+
+extension MachHeader32 {
+    var rawStride: Int {
+        MemoryLayout<mach_header>.stride
+    }
+}

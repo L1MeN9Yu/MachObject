@@ -12,6 +12,17 @@ public struct SourceVersionLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: source_version_command = machData.get(atOffset: offset)
+        self.init(command: command)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: source_version_command = pointer.get()
+        self.init(command: command)
+    }
+}
+
+private extension SourceVersionLC {
+    init(command: source_version_command) {
         version = SourceVersion(version: command.version)
     }
 }

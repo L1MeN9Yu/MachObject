@@ -13,9 +13,11 @@ public struct DyldEnvironmentLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: dylinker_command = machData.get(atOffset: offset)
-        name = String(
-            data: machData, offset: offset,
-            commandSize: Int(command.cmdsize), loadCommandString: command.name
-        )
+        name = String(data: machData, offset: offset, commandSize: Int(command.cmdsize), loadCommandString: command.name)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: dylinker_command = pointer.get()
+        name = String(loadCommandPointer: pointer, commandSize: Int(command.cmdsize), loadCommandString: command.name)
     }
 }

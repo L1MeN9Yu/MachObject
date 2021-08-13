@@ -14,12 +14,26 @@ public struct BuildVersionLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: build_version_command = machData.get(atOffset: offset)
+        let tool_versions: [build_tool_version] = machData.get(
+            atOffset: offset + MemoryLayout<build_version_command>.stride, count: Int(command.ntools)
+        )
+
+        self.init(command: command, tool_versions: tool_versions)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: build_version_command = pointer.get()
+        let tool_version_pointer = pointer.advanced(by: MemoryLayout<build_version_command>.stride)
+        let tool_versions: [build_tool_version] = tool_version_pointer.get(count: Int(command.ntools))
+        self.init(command: command, tool_versions: tool_versions)
+    }
+}
+
+private extension BuildVersionLC {
+    init(command: build_version_command, tool_versions: [build_tool_version]) {
         platform = Platform(platform: command.platform)
         minos = Version(machVersion: command.minos)
         sdk = Version(machVersion: command.sdk)
-        let tool_versions: [build_tool_version] = machData.get(
-            atOffset: offset + MemoryLayout<build_version_command>.size, count: Int(command.ntools)
-        )
         buildToolVersions = tool_versions.map { tool_version -> BuildToolVersion in
             BuildToolVersion(tool_version: tool_version)
         }

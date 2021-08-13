@@ -14,6 +14,17 @@ public struct EncryptionInfoLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: encryption_info_command = machData.get(atOffset: offset)
+        self.init(command: command)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: encryption_info_command = pointer.get()
+        self.init(command: command)
+    }
+}
+
+private extension EncryptionInfoLC {
+    init(command: encryption_info_command) {
         cryptOffset = command.cryptoff
         cryptSize = command.cryptsize
         cryptID = command.cryptid

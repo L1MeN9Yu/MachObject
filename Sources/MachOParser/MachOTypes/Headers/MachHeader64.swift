@@ -26,3 +26,9 @@ public struct MachHeader64 {
         reserved = header.reserved
     }
 }
+
+extension MachHeader64 {
+    var rawStride: Int {
+        MemoryLayout<mach_header_64>.stride
+    }
+}

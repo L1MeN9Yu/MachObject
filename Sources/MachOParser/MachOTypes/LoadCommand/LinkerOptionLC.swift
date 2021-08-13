@@ -12,6 +12,17 @@ public struct LinkerOptionLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: linker_option_command = machData.get(atOffset: offset)
+        self.init(command: command)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: linker_option_command = pointer.get()
+        self.init(command: command)
+    }
+}
+
+private extension LinkerOptionLC {
+    init(command: linker_option_command) {
         count = command.count
     }
 }

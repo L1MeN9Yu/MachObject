@@ -12,9 +12,11 @@ public struct SubUmbrellaLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: sub_umbrella_command = machData.get(atOffset: offset)
-        subUmbrella = String(
-            data: machData, offset: offset,
-            commandSize: Int(command.cmdsize), loadCommandString: command.sub_umbrella
-        )
+        subUmbrella = String(data: machData, offset: offset, commandSize: Int(command.cmdsize), loadCommandString: command.sub_umbrella)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: sub_umbrella_command = pointer.get()
+        subUmbrella = String(loadCommandPointer: pointer, commandSize: Int(command.cmdsize), loadCommandString: command.sub_umbrella)
     }
 }

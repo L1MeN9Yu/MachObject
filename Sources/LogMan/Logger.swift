@@ -6,6 +6,6 @@ import Foundation
 import Logging
 import Senna
 
-public let logger = Logger(label: "Logger") { (_: String) -> LogHandler in
-    Handler(sink: Standard.out, formatter: Formatter.default, logLevel: .trace)
+public let logger = Logger(label: "Logger") {
+    Handler(name: $0, sink: Standard.out, formatter: Formatter.standard, logLevel: .trace)
 }

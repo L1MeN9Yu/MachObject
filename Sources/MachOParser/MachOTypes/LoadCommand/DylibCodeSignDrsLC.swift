@@ -13,6 +13,17 @@ public struct DylibCodeSignDrsLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: linkedit_data_command = machData.get(atOffset: offset)
+        self.init(command: command)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: linkedit_data_command = pointer.get()
+        self.init(command: command)
+    }
+}
+
+private extension DylibCodeSignDrsLC {
+    init(command: linkedit_data_command) {
         dataOffset = command.dataoff
         dataSize = command.datasize
     }

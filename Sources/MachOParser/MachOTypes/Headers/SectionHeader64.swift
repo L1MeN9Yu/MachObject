@@ -20,8 +20,8 @@ public struct SectionHeader64 {
     public let reserved3: UInt32 /* reserved */
 
     init(section: section_64) {
-        sectionName = String(bytesTuple: section.sectname)
-        segmentName = String(bytesTuple: section.segname)
+        sectionName = String(tuple16: section.sectname)
+        segmentName = String(tuple16: section.segname)
         address = section.addr
         size = section.size
         offset = section.offset

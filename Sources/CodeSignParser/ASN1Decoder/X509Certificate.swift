@@ -228,7 +228,7 @@ public class X509Certificate {
         guard let extensionBlocks = extensionBlocks else { return [] }
         return extensionBlocks
             .map { X509Extension(block: $0) }
-            .filter { $0.isCritical }
+            .filter(\.isCritical)
             .compactMap(\.oid)
     }
 

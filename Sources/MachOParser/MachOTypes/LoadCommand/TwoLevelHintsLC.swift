@@ -12,6 +12,17 @@ public struct TwoLevelHintsLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: twolevel_hints_command = machData.get(atOffset: offset)
+        self.init(command: command)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: twolevel_hints_command = pointer.get()
+        self.init(command: command)
+    }
+}
+
+private extension TwoLevelHintsLC {
+    init(command: twolevel_hints_command) {
         hintOffset = command.offset
         hintCount = command.nhints
     }

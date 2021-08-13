@@ -19,6 +19,17 @@ public struct Routines64LC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: routines_command_64 = machData.get(atOffset: offset)
+        self.init(command: command)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: routines_command_64 = pointer.get()
+        self.init(command: command)
+    }
+}
+
+private extension Routines64LC {
+    init(command: routines_command_64) {
         initAddress = command.init_address
         initModule = command.init_module
         reserved1 = command.reserved1

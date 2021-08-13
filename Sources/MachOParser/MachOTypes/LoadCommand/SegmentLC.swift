@@ -22,7 +22,21 @@ public struct SegmentLC: LoadCommand {
 
     public init(machData: Data, offset: Int) {
         let command: segment_command = machData.get(atOffset: offset)
-        segmentName = String(bytesTuple: command.segname)
+        let sections: [section] = machData.get(atOffset: offset + MemoryLayout<segment_command>.stride, count: Int(command.nsects))
+        self.init(command: command, sections: sections)
+    }
+
+    public init(pointer: UnsafeRawPointer) {
+        let command: segment_command = pointer.get()
+        let sections_pointer = pointer.advanced(by: MemoryLayout<segment_command>.stride)
+        let sections: [section] = sections_pointer.get(count: Int(command.nsects))
+        self.init(command: command, sections: sections)
+    }
+}
+
+private extension SegmentLC {
+    init(command: segment_command, sections: [section]) {
+        segmentName = String(tuple16: command.segname)
         vmAddress = command.vmaddr
         vmSize = command.vmsize
         fileOffset = command.fileoff
@@ -31,10 +45,7 @@ public struct SegmentLC: LoadCommand {
         initProtection = command.initprot
         sectionCount = command.nsects
         flags = command.flags
-        let sections: [section] = machData.get(
-            atOffset: offset + MemoryLayout<segment_command>.size,
-            count: Int(command.nsects)
-        )
+
         sectionHeaders = sections.map { section -> SectionHeader in SectionHeader(section: section) }
     }
 }
