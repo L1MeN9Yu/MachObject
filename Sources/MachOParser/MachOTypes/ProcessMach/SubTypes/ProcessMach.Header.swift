@@ -89,9 +89,9 @@ extension ProcessMach.Header {
 }
 
 public extension ProcessMach.Header {
-    var cpuType: Mach.CPUType { Mach.CPUType(cpuType: rawCpuType) }
+    var cpuType: ProcessMach.CPUType { ProcessMach.CPUType(cpuType: rawCpuType) }
 
-    var fileType: Mach.FileType { Mach.FileType(fileType: rawFileType) }
+    var fileType: ProcessMach.FileType { ProcessMach.FileType(fileType: rawFileType) }
 
     var readableFlag: Set<MachHeaderFlag> { Set<MachHeaderFlag>(rawValue: Int64(rawFlags)) }
 

@@ -11,7 +11,7 @@ import var MachO.loader.MH_MAGIC
 import var MachO.loader.MH_MAGIC_64
 
 public struct ProcessMach {
-    private let pointer: UnsafeRawPointer
+    public let pointer: UnsafeRawPointer
     public let header: Header
     public let allLoadCommands: [LoadCommand]
 
@@ -46,6 +46,14 @@ private extension ProcessMach {
 }
 
 public extension ProcessMach {
+    var fileType: FileType { header.fileType }
+
+    var cpuType: CPUType { header.cpuType }
+
+    var flags: Set<MachHeaderFlag> { header.readableFlag }
+}
+
+public extension ProcessMach {
     func loadCommands<T: LoadCommand>() -> [T]? { allLoadCommands.compactMap { $0 as? T } }
 
     func loadCommand<T: LoadCommand>() -> T? { loadCommands()?.first }
@@ -56,5 +64,9 @@ public extension ProcessMach {
         guard let codeSignatureLC: CodeSignatureLC = loadCommand() else { return nil }
 
         return CodeSignature(machPointer: pointer, offset: Int(codeSignatureLC.dataOffset))
+    }
+
+    var stringTable: StringTable? {
+        StringTable(processMach: self)
     }
 }

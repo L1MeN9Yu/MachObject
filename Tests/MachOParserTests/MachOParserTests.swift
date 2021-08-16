@@ -68,5 +68,8 @@ extension MachOParserTests {
         if let codeSign = processMach.codeSignature {
             print("\(codeSign)")
         }
+        if let stringTable = processMach.stringTable {
+            print("\(stringTable)")
+        }
     }
 }

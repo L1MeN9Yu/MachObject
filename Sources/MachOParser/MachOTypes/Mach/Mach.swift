@@ -98,16 +98,20 @@ public extension Mach {
     var cpuType: CPUType { header.cpuType }
 
     var flags: Set<MachHeaderFlag> { header.readableFlag }
+}
 
+public extension Mach {
+    func loadCommands<T: LoadCommand>() -> [T]? { allLoadCommands.compactMap { $0 as? T } }
+
+    func loadCommand<T: LoadCommand>() -> T? { loadCommands()?.first }
+}
+
+public extension Mach {
     var codeSignature: CodeSignature? {
         guard let codeSignatureLC: CodeSignatureLC = loadCommand() else { return nil }
 
         return CodeSignature(machData: data, offset: Int(codeSignatureLC.dataOffset))
     }
-
-    func loadCommands<T: LoadCommand>() -> [T]? { allLoadCommands.compactMap { $0 as? T } }
-
-    func loadCommand<T: LoadCommand>() -> T? { loadCommands()?.first }
 
     var stringTable: StringTable? {
         StringTable(mach: self)
