@@ -3,7 +3,7 @@
 //
 
 import Foundation
-import LogMan
+@_implementationOnly import LogMan
 
 public enum Measurer {}
 

@@ -4,7 +4,7 @@
 
 import ArgumentParser
 import Foundation
-import LogMan
+@_implementationOnly import LogMan
 import Zip
 
 struct Obfuscate: ParsableCommand {
