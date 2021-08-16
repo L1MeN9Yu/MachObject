@@ -3,8 +3,8 @@
 //
 
 import Foundation
-@_implementationOnly import LogMan
 @_implementationOnly import MachCore
+@_implementationOnly import MachLog
 import MachOObjcParser
 import MachOParser
 

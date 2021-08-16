@@ -4,7 +4,7 @@
 
 import ArgumentParser
 import Foundation
-@_implementationOnly import LogMan
+@_implementationOnly import MachLog
 import Zip
 
 struct Obfuscate: ParsableCommand {

@@ -3,7 +3,7 @@
 //
 
 import Foundation
-@_implementationOnly import LogMan
+@_implementationOnly import MachLog
 
 public enum Measurer {}
 

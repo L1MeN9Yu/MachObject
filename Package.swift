@@ -19,12 +19,12 @@ let package = Package(
     ],
     targets: [
         .target(name: "MachCore"),
-        .target(name: "LogMan", dependencies: [
+        .target(name: "MachLog", dependencies: [
             .product(name: "Logging", package: "swift-log"),
             .product(name: "Senna", package: "Senna"),
         ]),
         .target(name: "Measure", dependencies: [
-            .target(name: "LogMan"),
+            .target(name: "MachLog"),
         ]),
         .target(name: "CodeSignParser", dependencies: [
             .target(name: "MachCore"),
@@ -53,7 +53,7 @@ let package = Package(
             .target(name: "MachOSwiftParser"),
             .target(name: "MachOObjcParser"),
             .target(name: "ObjCObfuscation"),
-            .target(name: "LogMan"),
+            .target(name: "MachLog"),
         ]),
         .target(name: "MachOCLI", dependencies: [
             .target(name: "MachOEditor"),
