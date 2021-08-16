@@ -1,6 +1,25 @@
 //
-// Created by Mengyu Li on 2020/8/24.
+//  PKCS7_Signature.swift
 //
+//  Copyright © 2020 Alexander Heinrich & Filippo Maguolo.
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
 import Foundation
 
@@ -41,7 +60,7 @@ public class SignatureInfo {
     public let signature: ASN1Object?
 
     public var signatureData: Data? {
-        signature?.value as? Data
+        signature?.rawValue
     }
 
     public var disgestAlgorithmName: String? {
@@ -73,7 +92,7 @@ public class SignatureInfo {
         let sub3 = asn1.sub(3)
         // Signed attributes is optional according to https://tools.ietf.org/html/rfc5652#section-5.3
         // value is not present e.g. in AppStore receipts
-        if sub3?.identifier?.typeClass == ASN1Identifier.Class.contextSpecific {
+        if sub3?.identifier?.typeClass() == ASN1Identifier.Class.contextSpecific {
             signedAttributes = sub3
             signatureAlgorithm = asn1.sub(4)
             signature = asn1.sub(5)

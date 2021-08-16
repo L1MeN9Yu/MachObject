@@ -1,6 +1,25 @@
 //
-// Created by Mengyu Li on 2020/8/24.
+//  ASN1DERDecoder.swift
 //
+//  Copyright © 2017 Filippo Maguolo.
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
 import Foundation
 
@@ -17,7 +36,7 @@ public enum ASN1DERDecoder {
             let asn1obj = ASN1Object()
             asn1obj.identifier = ASN1Identifier(rawValue: nextValue)
 
-            if asn1obj.identifier!.isConstructed {
+            if asn1obj.identifier!.isConstructed() {
                 let contentData = try loadSubContent(iterator: &iterator)
 
                 if contentData.isEmpty {
@@ -35,14 +54,14 @@ public enum ASN1DERDecoder {
                     item.parent = asn1obj
                 }
             } else {
-                if asn1obj.identifier!.typeClass == .universal {
+                if asn1obj.identifier!.typeClass() == .universal {
                     var contentData = try loadSubContent(iterator: &iterator)
 
                     asn1obj.rawValue = Data(contentData)
 
                     // decode the content data with come more convenient format
 
-                    switch asn1obj.identifier!.tagNumber {
+                    switch asn1obj.identifier!.tagNumber() {
                     case .endOfContent:
                         return result
 
@@ -108,13 +127,14 @@ public enum ASN1DERDecoder {
                         }
 
                     default:
-                        print("unsupported tag: \(asn1obj.identifier!.tagNumber)")
+                        print("unsupported tag: \(asn1obj.identifier!.tagNumber())")
                         asn1obj.value = contentData
                     }
                 } else {
                     // custom/private tag
 
                     let contentData = try loadSubContent(iterator: &iterator)
+                    asn1obj.rawValue = Data(contentData)
 
                     if let str = String(data: contentData, encoding: .utf8) {
                         asn1obj.value = str
@@ -128,53 +148,10 @@ public enum ASN1DERDecoder {
         return result
     }
 
-    // Decode the number of bytes of the content
-    private static func getContentLength(iterator: inout Data.Iterator) -> UInt64 {
-        let first = iterator.next()
-
-        guard first != nil else {
-            return 0
-        }
-
-        if (first! & 0x80) != 0 { // long
-            let octetsToRead = first! - 0x80
-            var data = Data()
-            for _ in 0..<octetsToRead {
-                if let n = iterator.next() {
-                    data.append(n)
-                }
-            }
-
-            return data.uint64 ?? 0
-
-        } else { // short
-            return UInt64(first!)
-        }
-    }
-
-    private static func loadSubContent(iterator: inout Data.Iterator) throws -> Data {
-        let len = getContentLength(iterator: &iterator)
-
-        guard len < Int.max else {
-            return Data()
-        }
-
-        var byteArray: [UInt8] = []
-
-        for _ in 0..<Int(len) {
-            if let n = iterator.next() {
-                byteArray.append(n)
-            } else {
-                throw ASN1Error.outOfBuffer
-            }
-        }
-        return Data(byteArray)
-    }
-
     // Decode DER OID bytes to String with dot notation
-    static func decodeOid(contentData: inout Data) -> String {
+    static func decodeOid(contentData: inout Data) -> String? {
         if contentData.isEmpty {
-            return ""
+            return nil
         }
 
         var oid: String = ""
@@ -206,4 +183,78 @@ public enum ASN1DERDecoder {
         }
         return nil
     }
+}
+
+enum ASN1Error: Error {
+    case parseError
+    case outOfBuffer
+}
+
+public extension Data {
+    var uint64Value: UInt64? {
+        guard count <= 8, !isEmpty else { // check if suitable for UInt64
+            return nil
+        }
+
+        var value: UInt64 = 0
+        for (index, byte) in enumerated() {
+            value += UInt64(byte) << UInt64(8 * (count - index - 1))
+        }
+        return value
+    }
+}
+
+public extension Data {
+    var sequenceContent: Data {
+        var iterator = makeIterator()
+        _ = iterator.next()
+        do {
+            return try loadSubContent(iterator: &iterator)
+        } catch {
+            return self
+        }
+    }
+}
+
+// Decode the number of bytes of the content
+private func getContentLength(iterator: inout Data.Iterator) -> UInt64 {
+    let first = iterator.next()
+
+    guard first != nil else {
+        return 0
+    }
+
+    if (first! & 0x80) != 0 { // long
+        let octetsToRead = first! - 0x80
+        var data = Data()
+        for _ in 0..<octetsToRead {
+            if let n = iterator.next() {
+                data.append(n)
+            }
+        }
+
+        return data.uint64Value ?? 0
+
+    } else { // short
+        return UInt64(first!)
+    }
+}
+
+private func loadSubContent(iterator: inout Data.Iterator) throws -> Data {
+    let len = getContentLength(iterator: &iterator)
+
+    guard len < Int.max else {
+        return Data()
+    }
+
+    var byteArray: [UInt8] = []
+
+    for _ in 0..<Int(len) {
+        if let n = iterator.next() {
+            byteArray.append(n)
+        } else {
+            throw ASN1Error.outOfBuffer
+        }
+    }
+    return Data(byteArray)
 }

@@ -1,17 +1,33 @@
 //
-// Created by Mengyu Li on 2020/8/24.
+//  PKCS7.swift
 //
+//  Copyright © 2017 Filippo Maguolo.
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
 import Foundation
 
-public struct PKCS7 {
-    let derData: Data
-    let asn1: [ASN1Object]
-    let mainBlock: ASN1Object
+public class PKCS7 {
+    public let mainBlock: ASN1Object
 
     public init(data: Data) throws {
-        derData = data
-        asn1 = try ASN1DERDecoder.decode(data: derData)
+        let asn1 = try ASN1DERDecoder.decode(data: data)
 
         guard let firstBlock = asn1.first,
               let mainBlock = firstBlock.sub(1)?.sub(0)
@@ -25,29 +41,27 @@ public struct PKCS7 {
             throw PKCS7Error.notSupported
         }
     }
-}
 
-public extension PKCS7 {
-    var digestAlgorithm: String? {
+    public var digestAlgorithm: String? {
         if let block = mainBlock.sub(1) {
             return firstLeafValue(block: block) as? String
         }
         return nil
     }
 
-    var digestAlgorithmName: String? {
+    public var digestAlgorithmName: String? {
         OID.description(of: digestAlgorithm ?? "") ?? digestAlgorithm
     }
 
-    var certificate: X509Certificate? {
+    public var certificate: X509Certificate? {
         mainBlock.sub(3)?.sub?.first.map { try? X509Certificate(asn1: $0) } ?? nil
     }
 
-    var certificates: [X509Certificate] {
+    public var certificates: [X509Certificate] {
         mainBlock.sub(3)?.sub?.compactMap { try? X509Certificate(asn1: $0) } ?? []
     }
 
-    var data: Data? {
+    public var data: Data? {
         if let block = mainBlock.findOid(.pkcs7data) {
             if let dataBlock = block.parent?.sub?.last {
                 var out = Data()
@@ -75,4 +89,9 @@ public extension PKCS7 {
         }
         return nil
     }
+}
+
+enum PKCS7Error: Error {
+    case notSupported
+    case parseError
 }

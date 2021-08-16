@@ -48,12 +48,13 @@ public struct CodeSignature {
 
     public init(machPointer: UnsafeRawPointer, offset: Int) {
         let superBlob: SuperBlob = machPointer.advanced(by: offset).get()
+        let blobCount = superBlob.count.byteSwapped
 
         var entitlementsString: String?
         var codeDirectoryList = [CodeDirectory]()
         var cmsSignatureString: String?
 
-        for index in 0..<superBlob.count.byteSwapped {
+        for index in 0..<blobCount {
             let blobIndexOffset = offset + MemoryLayout<SuperBlob>.size + MemoryLayout<BlobIndex>.size * Int(index)
             let blobIndex: BlobIndex = machPointer.advanced(by: blobIndexOffset).get()
             let slot = Slot(rawValue: blobIndex.type.byteSwapped)

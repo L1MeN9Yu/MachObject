@@ -1,6 +1,25 @@
 //
-// Created by Mengyu Li on 2020/8/24.
+//  PKCS7_AppleReceipt.swift
 //
+//  Copyright © 2018 Filippo Maguolo.
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
 import Foundation
 
@@ -56,12 +75,16 @@ public extension PKCS7 {
 
     func receipt() -> ReceiptInfo? {
         guard let block = mainBlock.findOid(.pkcs7data) else { return nil }
-        guard let receiptBlock = block.parent?.sub?.last?.sub(0)?.sub(0) else { return nil }
+        guard var receiptBlock = block.parent?.sub?.last?.sub(0)?.sub(0) else { return nil }
         var receiptInfo = ReceiptInfo()
 
+        if receiptBlock.asString == "Xcode" {
+            receiptBlock = receiptBlock.sub(0)!
+        }
+
         for item in receiptBlock.sub ?? [] {
-            let fieldType = (item.sub(0)?.value as? Data)?.uint64 ?? 0
-            let fieldValueString = item.sub(2)?.sub?.first?.value as? String
+            let fieldType = (item.sub(0)?.value as? Data)?.uint64Value ?? 0
+            let fieldValueString = item.sub(2)?.asString
             switch fieldType {
             case 2:
                 receiptInfo.bundleIdentifier = fieldValueString
@@ -106,11 +129,11 @@ public extension PKCS7 {
     private func inAppPurchase(_ subItems: [ASN1Object]) -> InAppPurchaseInfo {
         var inAppPurchaseInfo = InAppPurchaseInfo()
         subItems.forEach { subItem in
-            let fieldType = (subItem.sub(0)?.value as? Data)?.uint64 ?? 0
+            let fieldType = (subItem.sub(0)?.value as? Data)?.uint64Value ?? 0
             let fieldValue = subItem.sub(2)?.sub?.first?.value
             switch fieldType {
             case 1701:
-                inAppPurchaseInfo.quantity = (fieldValue as? Data)?.uint64
+                inAppPurchaseInfo.quantity = (fieldValue as? Data)?.uint64Value
             case 1702:
                 inAppPurchaseInfo.productId = fieldValue as? String
             case 1703:
@@ -130,13 +153,13 @@ public extension PKCS7 {
                     inAppPurchaseInfo.expiresDate = parseDate(fieldValueString)
                 }
             case 1719:
-                inAppPurchaseInfo.isInIntroOfferPeriod = (fieldValue as? Data)?.uint64
+                inAppPurchaseInfo.isInIntroOfferPeriod = (fieldValue as? Data)?.uint64Value
             case 1712:
                 if let fieldValueString = fieldValue as? String {
                     inAppPurchaseInfo.cancellationDate = parseDate(fieldValueString)
                 }
             case 1711:
-                inAppPurchaseInfo.webOrderLineItemId = (fieldValue as? Data)?.uint64
+                inAppPurchaseInfo.webOrderLineItemId = (fieldValue as? Data)?.uint64Value
             default:
                 break
             }

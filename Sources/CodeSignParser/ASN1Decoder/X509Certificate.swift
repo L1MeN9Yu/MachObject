@@ -1,10 +1,29 @@
 //
-// Created by Mengyu Li on 2020/8/24.
+//  X509Certificate.swift
 //
+//  Copyright © 2017 Filippo Maguolo.
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 
 import Foundation
 
-public class X509Certificate {
+public class X509Certificate: CustomStringConvertible {
     private let asn1: [ASN1Object]
     private let block1: ASN1Object
 
@@ -56,6 +75,10 @@ public class X509Certificate {
         self.block1 = block1
     }
 
+    public var description: String {
+        asn1.reduce("") { $0 + "\($1.description)\n" }
+    }
+
     /// Checks that the given date is within the certificate's validity period.
     public func checkValidity(_ date: Date = Date()) -> Bool {
         if let notBefore = notBefore, let notAfter = notAfter {
@@ -66,10 +89,10 @@ public class X509Certificate {
 
     /// Gets the version (version number) value from the certificate.
     public var version: Int? {
-        if let v = firstLeafValue(block: block1) as? Data, let index = v.uint64 {
-            return Int(index) + 1
+        if let data = firstLeafValue(block: block1) as? Data, let value = data.uint64Value, value < Int.max {
+            return Int(value) + 1
         }
-        return nil
+        return 1
     }
 
     /// Gets the serialNumber value from the certificate.
@@ -80,7 +103,7 @@ public class X509Certificate {
     /// Returns the issuer (issuer distinguished name) value from the certificate as a String.
     public var issuerDistinguishedName: String? {
         if let issuerBlock = block1[X509BlockPosition.issuer] {
-            return blockDistinguishedName(block: issuerBlock)
+            return ASN1DistinguishedNameFormatter.string(from: issuerBlock)
         }
         return nil
     }
@@ -89,7 +112,7 @@ public class X509Certificate {
         var result: [String] = []
         if let subjectBlock = block1[X509BlockPosition.issuer] {
             for sub in subjectBlock.sub ?? [] {
-                if let value = firstLeafValue(block: sub) as? String {
+                if let value = firstLeafValue(block: sub) as? String, !result.contains(value) {
                     result.append(value)
                 }
             }
@@ -97,23 +120,28 @@ public class X509Certificate {
         return result
     }
 
-    public func issuer(oid: String) -> String? {
+    public func issuer(oidString: String) -> String? {
         if let subjectBlock = block1[X509BlockPosition.issuer] {
-            if let oidBlock = subjectBlock.findOid(oid) {
+            if let oidBlock = subjectBlock.findOid(oidString) {
                 return oidBlock.parent?.sub?.last?.value as? String
             }
         }
         return nil
     }
 
+    public func issuer(oid: OID) -> String? {
+        issuer(oidString: oid.rawValue)
+    }
+
+    @available(*, deprecated, message: "Use issuer(oid:) instead")
     public func issuer(dn: ASN1DistinguishedNames) -> String? {
-        issuer(oid: dn.oid)
+        issuer(oidString: dn.oid)
     }
 
     /// Returns the subject (subject distinguished name) value from the certificate as a String.
     public var subjectDistinguishedName: String? {
         if let subjectBlock = block1[X509BlockPosition.subject] {
-            return blockDistinguishedName(block: subjectBlock)
+            return ASN1DistinguishedNameFormatter.string(from: subjectBlock)
         }
         return nil
     }
@@ -122,7 +150,7 @@ public class X509Certificate {
         var result: [String] = []
         if let subjectBlock = block1[X509BlockPosition.subject] {
             for sub in subjectBlock.sub ?? [] {
-                if let value = firstLeafValue(block: sub) as? String {
+                if let value = firstLeafValue(block: sub) as? String, !result.contains(value) {
                     result.append(value)
                 }
             }
@@ -130,17 +158,31 @@ public class X509Certificate {
         return result
     }
 
-    public func subject(oid: String) -> String? {
+    public func subject(oidString: String) -> [String]? {
+        var result: [String]?
         if let subjectBlock = block1[X509BlockPosition.subject] {
-            if let oidBlock = subjectBlock.findOid(oid) {
-                return oidBlock.parent?.sub?.last?.value as? String
+            for sub in subjectBlock.sub ?? [] {
+                if let oidBlock = sub.findOid(oidString) {
+                    guard let value = oidBlock.parent?.sub?.last?.value as? String else {
+                        continue
+                    }
+                    if result == nil {
+                        result = []
+                    }
+                    result?.append(value)
+                }
             }
         }
-        return nil
+        return result
     }
 
-    public func subject(dn: ASN1DistinguishedNames) -> String? {
-        subject(oid: dn.oid)
+    public func subject(oid: OID) -> [String]? {
+        subject(oidString: oid.rawValue)
+    }
+
+    @available(*, deprecated, message: "Use subject(oid:) instead")
+    public func subject(dn: ASN1DistinguishedNames) -> [String]? {
+        subject(oidString: dn.oid)
     }
 
     /// Gets the notBefore date from the validity period of the certificate.
@@ -218,7 +260,7 @@ public class X509Certificate {
         extensionObject(oid: OID.issuerAltName)?.alternativeNameAsStrings ?? []
     }
 
-    /// Gets the information of the public key from this certificate.
+    /// Gets the informations of the public key from this certificate.
     public var publicKey: X509PublicKey? {
         block1[X509BlockPosition.publicKey].map(X509PublicKey.init)
     }
@@ -255,46 +297,20 @@ public class X509Certificate {
         block1[X509BlockPosition.extensions]?
             .findOid(oid)?
             .parent
-            .map(X509Extension.init)
+            .map { oidExtensionMap[oid]?.init(block: $0) ?? X509Extension(block: $0) }
     }
 
-    // Format subject/issuer information in RFC1779
-    private func blockDistinguishedName(block: ASN1Object) -> String {
-        var result = ""
-        let oidNames: [ASN1DistinguishedNames] = [
-            .commonName,
-            .dnQualifier,
-            .serialNumber,
-            .givenName,
-            .surname,
-            .organizationalUnitName,
-            .organizationName,
-            .streetAddress,
-            .localityName,
-            .stateOrProvinceName,
-            .countryName,
-            .email,
-        ]
-        for oidName in oidNames {
-            if let oidBlock = block.findOid(oidName.oid) {
-                if !result.isEmpty {
-                    result.append(", ")
-                }
-                result.append(oidName.representation)
-                result.append("=")
-                if let value = oidBlock.parent?.sub?.last?.value as? String {
-                    let specialChar = ",+=\n<>#;\\"
-                    let quote = value.contains(where: { specialChar.contains($0) }) ? "\"" : ""
-                    result.append(quote)
-                    result.append(value)
-                    result.append(quote)
-                }
-            }
-        }
-        return result
-    }
+    // Association of Class decoding helper and OID
+    private let oidExtensionMap: [String: X509Extension.Type] = [
+        OID.basicConstraints.rawValue: BasicConstraintExtension.self,
+        OID.subjectKeyIdentifier.rawValue: SubjectKeyIdentifierExtension.self,
+        OID.authorityInfoAccess.rawValue: AuthorityInfoAccessExtension.self,
+        OID.authorityKeyIdentifier.rawValue: AuthorityKeyIdentifierExtension.self,
+        OID.certificatePolicies.rawValue: CertificatePoliciesExtension.self,
+        OID.cRLDistributionPoints.rawValue: CRLDistributionPointsExtension.self,
+    ]
 
-    // read possible PEM encoding
+    // read possibile PEM encoding
     private static func decodeToDER(pem pemData: Data) -> Data? {
         if
             let pem = String(data: pemData, encoding: .ascii),
@@ -323,12 +339,6 @@ public class X509Certificate {
     }
 }
 
-extension X509Certificate: CustomStringConvertible {
-    public var description: String {
-        asn1.reduce("") { $0 + "\($1.description)\n" }
-    }
-}
-
 func firstLeafValue(block: ASN1Object) -> Any? {
     if let sub = block.sub?.first {
         return firstLeafValue(block: sub)
@@ -338,8 +348,13 @@ func firstLeafValue(block: ASN1Object) -> Any? {
 
 extension ASN1Object {
     subscript(index: X509Certificate.X509BlockPosition) -> ASN1Object? {
-        guard let sub = sub,
-              sub.indices.contains(index.rawValue) else { return nil }
-        return sub[index.rawValue]
+        guard let sub = sub else { return nil }
+        if sub.count <= 6 {
+            guard sub.indices.contains(index.rawValue - 1) else { return nil }
+            return sub[index.rawValue - 1]
+        } else {
+            guard sub.indices.contains(index.rawValue) else { return nil }
+            return sub[index.rawValue]
+        }
     }
 }

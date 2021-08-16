@@ -1,7 +1,8 @@
 //
-//  X509Extension.swift
+//  ASN1Encoder.swift
+//  ASN1Decoder
 //
-//  Copyright © 2019 Filippo Maguolo.
+//  Copyright © 2020 Filippo Maguolo.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,46 +24,33 @@
 
 import Foundation
 
-public class X509Extension {
-    let block: ASN1Object
-
-    required init(block: ASN1Object) {
-        self.block = block
+public enum ASN1DEREncoder {
+    public static func encodeSequence(content: Data) -> Data {
+        var encoded = Data()
+        encoded.append(ASN1Identifier.constructedTag | ASN1Identifier.TagNumber.sequence.rawValue)
+        encoded.append(contentLength(of: content.count))
+        encoded.append(content)
+        return encoded
     }
 
-    public var oid: String? {
-        block.sub(0)?.value as? String
-    }
-
-    public var name: String? {
-        OID.description(of: oid ?? "")
-    }
-
-    public var isCritical: Bool {
-        if block.sub?.count ?? 0 > 2 {
-            return block.sub(1)?.value as? Bool ?? false
+    private static func contentLength(of size: Int) -> Data {
+        if size >= 128 {
+            var lenBytes = byteArray(from: size)
+            while lenBytes.first == 0 { lenBytes.removeFirst() }
+            let len: UInt8 = 0x80 | UInt8(lenBytes.count)
+            return Data([len] + lenBytes)
+        } else {
+            return Data([UInt8(size)])
         }
-        return false
     }
 
-    public var value: Any? {
-        if let valueBlock = block.sub?.last {
-            return firstLeafValue(block: valueBlock)
-        }
-        return nil
+    private static func byteArray<T>(from value: T) -> [UInt8] where T: FixedWidthInteger {
+        withUnsafeBytes(of: value.bigEndian, Array.init)
     }
+}
 
-    var valueAsBlock: ASN1Object? {
-        block.sub?.last
-    }
-
-    var valueAsStrings: [String] {
-        var result: [String] = []
-        for item in block.sub?.last?.sub?.last?.sub ?? [] {
-            if let name = item.value as? String {
-                result.append(name)
-            }
-        }
-        return result
+public extension Data {
+    var derEncodedSequence: Data {
+        ASN1DEREncoder.encodeSequence(content: self)
     }
 }

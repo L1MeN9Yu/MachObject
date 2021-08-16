@@ -65,9 +65,6 @@ extension MachOParserTests {
 
         let processMach = try ProcessMach(headerPointer: headerFromDyld)
         print("\(processMach.header)")
-        if let codeSign = processMach.codeSignature {
-            print("\(codeSign)")
-        }
         if let stringTable = processMach.stringTable {
             print("\(stringTable)")
         }

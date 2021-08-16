@@ -60,12 +60,6 @@ public extension ProcessMach {
 }
 
 public extension ProcessMach {
-    var codeSignature: CodeSignature? {
-        guard let codeSignatureLC: CodeSignatureLC = loadCommand() else { return nil }
-
-        return CodeSignature(machPointer: pointer, offset: Int(codeSignatureLC.dataOffset))
-    }
-
     var stringTable: StringTable? {
         StringTable(processMach: self)
     }
