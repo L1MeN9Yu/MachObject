@@ -24,10 +24,10 @@
 import Foundation
 
 /*
- This extension allow to parse the content of an Apple receipt from the AppStore.
+    This extension allow to parse the content of an Apple receipt from the AppStore.
 
- Reference documentation
- https://developer.apple.com/library/archive/releasenotes/General/ValidateAppStoreReceipt/Chapters/ReceiptFields.html
+    Reference documentation
+    https://developer.apple.com/library/archive/releasenotes/General/ValidateAppStoreReceipt/Chapters/ReceiptFields.html
  */
 public extension PKCS7 {
     struct ReceiptInfo {

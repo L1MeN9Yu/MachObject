@@ -9,7 +9,7 @@ public extension Array where Element == Import {
     mutating func add(opcodesData: Data, range: Range<Int>, weakly: Bool) {
         let parsedStack = opcodesData.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> ImportStack in
             var stack = ImportStack()
-            var dylibOrdinal: Int = 0
+            var dylibOrdinal = 0
             var symbolBytes: [UInt8]?
             var symbolStart: Int?
             var cursorPtr = bytes.baseAddress!.advanced(by: range.lowerBound)

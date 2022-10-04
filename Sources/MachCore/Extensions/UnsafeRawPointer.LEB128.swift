@@ -26,7 +26,7 @@ public extension UnsafeRawPointer {
     private mutating func readLeb128<T: FixedWidthInteger>(continuationBitState: Bool) -> T {
         var accumulator: T = 0
         var group: UInt8
-        var shift: Int = 0
+        var shift = 0
         let maxShift = (MemoryLayout<T>.size * 8) - 1
         repeat {
             if shift > maxShift {

@@ -29,7 +29,7 @@ extension Data {
 
         let rangesPerString = stringRanges(in: range)
         rangesPerString.filter { filter($0.key) }
-            .forEach { (originalString: String, ranges: [Range<Int>]) -> () in
+            .forEach { (originalString: String, ranges: [Range<Int>]) in
                 let mappedString = mapping(originalString)
                 precondition(originalString.utf8.count >= mappedString.utf8.count)
                 guard let mappedData = mappedString.data(using: .utf8) else { return }

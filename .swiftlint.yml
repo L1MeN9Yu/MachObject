@@ -13,12 +13,17 @@ disabled_rules:
 opt_in_rules:
   - indentation_width
 
-line_length: 120
+line_length: 220
 
 indentation_width: 4
 
 function_body_length:
   - 50
+
+inclusive_language:
+  override_allowed_terms:
+    - blacklist
+    - whitelist
 
 included:
   - Sources

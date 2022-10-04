@@ -45,7 +45,7 @@ final class MachOParserTests: XCTestCase {
                 if architecture.mach.cpuType == .arm64 { return architecture.mach }
                 return nil
             })
-                .first else { fatalError() }
+            .first else { fatalError() }
             return arm64Mach
         case let .mach(mach):
             return mach

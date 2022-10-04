@@ -12,10 +12,10 @@ let package = Package(
         .executable(name: "IPAObfuscatory", targets: ["IPAObfuscatory"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.4.4"),
-        .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
-        .package(url: "https://github.com/L1MeN9Yu/Senna.git", from: "2.3.0"),
-        .package(url: "https://github.com/marmelroy/Zip.git", from: "2.1.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.5.0"),
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.4.4"),
+        .package(url: "https://github.com/L1MeN9Yu/Senna.git", from: "2.5.0"),
+        .package(url: "https://github.com/marmelroy/Zip.git", from: "2.1.2"),
     ],
     targets: [
         .target(name: "MachCore"),

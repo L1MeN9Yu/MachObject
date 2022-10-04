@@ -15,7 +15,7 @@ extension SwiftDemangler {
         let fixedName: String = name.hasPrefix("So") ? "$s" + name : name
         guard canDemangleFromRuntime(fixedName) || canDemangleFromRuntime(name) else { return name }
 
-        let bufLen: Int = 128 // may be 128 is big enough
+        let bufLen = 128 // may be 128 is big enough
         var buf = [Int8](repeating: 0, count: bufLen)
         let retLen = _getDemangledName(fixedName, &buf, bufLen)
 

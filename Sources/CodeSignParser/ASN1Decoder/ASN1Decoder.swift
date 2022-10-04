@@ -154,7 +154,7 @@ public enum ASN1DERDecoder {
             return nil
         }
 
-        var oid: String = ""
+        var oid = ""
 
         let first = Int(contentData.remove(at: 0))
         oid.append("\(first / 40).\(first % 40)")

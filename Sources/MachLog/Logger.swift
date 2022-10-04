@@ -7,5 +7,5 @@ import Logging
 import Senna
 
 public let logger = Logger(label: "Logger") {
-    Handler(name: $0, sink: Standard.out, formatter: Formatter.standard, logLevel: .trace)
+    Handler(name: $0, sink: StandardSink.out(), formation: Formation.standard, logLevel: .trace)
 }
