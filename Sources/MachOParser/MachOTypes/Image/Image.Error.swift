@@ -2,9 +2,9 @@
 // Created by Mengyu Li on 2020/7/24.
 //
 
-import Foundation
+import struct Foundation.URL
 
-extension Image {
+public extension Image {
     enum Error: Swift.Error {
         case unsupported(url: URL, magic: UInt32?)
     }
