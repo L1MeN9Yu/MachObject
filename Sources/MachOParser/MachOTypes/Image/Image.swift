@@ -16,9 +16,9 @@ public struct Image {
         let data = try Data(contentsOf: url, options: .mappedIfSafe)
         let magic = data.magic
         switch magic {
-        case FAT_CIGAM, FAT_MAGIC:
+        case FAT_MAGIC, FAT_CIGAM, FAT_MAGIC_64, FAT_CIGAM_64:
             content = try .fat(Fat(data: data))
-        case MH_MAGIC, MH_MAGIC_64:
+        case MH_MAGIC, MH_CIGAM, MH_MAGIC_64, MH_CIGAM_64:
             content = try .mach(Mach(data: data))
         default:
             throw Error.unsupported(url: url, magic: magic)
@@ -33,6 +33,8 @@ public extension Image {
         try Image(url: url)
     }
 }
+
+// MARK: - Public
 
 public extension Image {
     func eachMach(block: (Mach) -> ()) {
