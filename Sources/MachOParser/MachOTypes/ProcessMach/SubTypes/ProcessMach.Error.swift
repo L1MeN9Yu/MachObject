@@ -3,7 +3,5 @@
 //
 
 public extension ProcessMach {
-    enum Error: Swift.Error {
-        case magic(UInt32)
-    }
+    typealias Error = Mach.Error
 }

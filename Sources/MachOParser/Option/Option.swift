@@ -7,7 +7,8 @@ public protocol Option: Hashable, CaseIterable {
 }
 
 extension Set: RawRepresentable where Element: Option {
-    public var rawValue: Int64 {
+    public typealias RawValue = Int64
+    public var rawValue: RawValue {
         var rawValue: Int64 = 0
         for element in Element.allCases {
             if contains(element) {
@@ -18,7 +19,7 @@ extension Set: RawRepresentable where Element: Option {
         return rawValue
     }
 
-    public init(rawValue: Int64) {
+    public init(rawValue: RawValue) {
         var result = [Element]()
         for element in Element.allCases {
             if rawValue & element.value == element.value {

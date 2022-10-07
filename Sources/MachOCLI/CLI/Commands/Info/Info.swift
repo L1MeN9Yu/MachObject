@@ -43,7 +43,7 @@ private extension Info {
         print("file type : \(mach.header.fileType)")
         print("command count : \(mach.header.commandCount)")
         print("command size : \(mach.header.commandSize)")
-        print("flags : \(mach.header.readableFlag)")
+        print("flags : \(mach.header.flags)")
     }
 
     func loadCommands(mach: Mach) {

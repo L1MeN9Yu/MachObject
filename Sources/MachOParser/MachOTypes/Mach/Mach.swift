@@ -35,9 +35,9 @@ public struct Mach {
         let magic = data.magic
         switch magic {
         case MH_MAGIC, MH_CIGAM:
-            self.init(data32: data, swapped: magic == MH_CIGAM)
+            try self.init(data32: data, swapped: magic == MH_CIGAM)
         case MH_MAGIC_64, MH_CIGAM_64:
-            self.init(data64: data, swapped: magic == MH_CIGAM_64)
+            try self.init(data64: data, swapped: magic == MH_CIGAM_64)
         default:
             throw Error.magic(magic)
         }
@@ -45,21 +45,21 @@ public struct Mach {
 }
 
 private extension Mach {
-    init(data32: Data, swapped: Bool) {
+    init(data32: Data, swapped: Bool) throws {
         data = data32
         self.swapped = swapped
         let header: mach_header = data32.get(atOffset: 0)
-        self.header = ._32(MachHeader32(header: header))
+        self.header = try ._32(Header._32_(header: header))
         allLoadCommands = Self.parseLoadCommand(
             data: data32, count: header.ncmds, headerSize: MemoryLayout<mach_header>.size
         )
     }
 
-    init(data64: Data, swapped: Bool) {
+    init(data64: Data, swapped: Bool) throws {
         data = data64
         self.swapped = swapped
         let header: mach_header_64 = data64.get(atOffset: 0)
-        self.header = ._64(MachHeader64(header: header))
+        self.header = try ._64(Header._64_(header: header))
         allLoadCommands = Self.parseLoadCommand(
             data: data64, count: header.ncmds, headerSize: MemoryLayout<mach_header_64>.size
         )
@@ -85,7 +85,8 @@ public extension Mach {
         var mutableSelf = self
         guard let section = (mutableSelf.sections.first {
             $0.segmentName == T.segmentName && $0.name == T.sectionName
-        }) else { return nil }
+        })
+        else { return nil }
         return T(machoData: data, range: section.range)
     }
 }
@@ -93,11 +94,11 @@ public extension Mach {
 // MARK: - Readable Property
 
 public extension Mach {
-    var fileType: FileType { header.fileType }
+    var fileType: Header.FileType { header.fileType }
 
     var cpuType: CPUType { header.cpuType }
 
-    var flags: Set<MachHeaderFlag> { header.readableFlag }
+    var flags: Set<Header.Flag> { header.flags }
 }
 
 public extension Mach {
