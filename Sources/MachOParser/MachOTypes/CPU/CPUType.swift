@@ -4,7 +4,7 @@
 
 import MachO
 
-enum CPUType {
+public enum CPUType {
     case any
     case vax
     case mc680X0

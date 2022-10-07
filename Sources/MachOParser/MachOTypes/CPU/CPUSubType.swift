@@ -2,7 +2,7 @@
 // Created by Mengyu Li on 2022/10/7.
 //
 
-import Darwin.Mach.machine
+import MachO
 
 public enum CPUSubType {
     case any
