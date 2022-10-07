@@ -5,5 +5,6 @@
 public extension Mach {
     enum Error: Swift.Error {
         case magic(UInt32?)
+        case fileType(UInt32)
     }
 }

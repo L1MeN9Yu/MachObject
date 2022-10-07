@@ -21,3 +21,13 @@ public extension Fat {
         }
     }
 }
+
+public extension Fat.Header {
+    static var rawSize: Int {
+        MemoryLayout<fat_header>.size
+    }
+
+    static var rawStride: Int {
+        MemoryLayout<fat_header>.stride
+    }
+}

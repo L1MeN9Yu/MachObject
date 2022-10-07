@@ -2,14 +2,13 @@
 // Created by Mengyu Li on 2020/7/29.
 //
 
-import Foundation
-
 public protocol Option: Hashable, CaseIterable {
     var value: Int64 { get }
 }
 
-public extension Set where Element: Option {
-    var rawValue: Int64 {
+extension Set: RawRepresentable where Element: Option {
+    public typealias RawValue = Int64
+    public var rawValue: RawValue {
         var rawValue: Int64 = 0
         for element in Element.allCases {
             if contains(element) {
@@ -20,7 +19,7 @@ public extension Set where Element: Option {
         return rawValue
     }
 
-    init(rawValue: Int64) {
+    public init(rawValue: RawValue) {
         var result = [Element]()
         for element in Element.allCases {
             if rawValue & element.value == element.value {
