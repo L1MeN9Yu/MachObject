@@ -38,12 +38,12 @@ public struct Fat {
 
         switch bitWide {
         case ._32:
-            let fatArchitectures: [fat_arch] = data.get(atOffset: MemoryLayout<fat_header>.size, count: Int(header.architectureCount))
+            let fatArchitectures: [fat_arch] = data.get(atOffset: Header.rawSize, count: Int(header.architectureCount))
             architectures = try fatArchitectures.map { [byteOrder] arch in
                 try Architecture._32(Architecture._32_(data: data, arch: arch, byteOrder: byteOrder))
             }
         case ._64:
-            let fatArchitectures: [fat_arch_64] = data.get(atOffset: MemoryLayout<fat_header>.size, count: Int(header.architectureCount))
+            let fatArchitectures: [fat_arch_64] = data.get(atOffset: Header.rawSize, count: Int(header.architectureCount))
             architectures = try fatArchitectures.map { [byteOrder] arch in
                 try Architecture._64(Architecture._64_(data: data, arch: arch, byteOrder: byteOrder))
             }
