@@ -43,15 +43,16 @@ public extension Fat.Architecture {
         public let mach: Mach
 
         init(data: Data, arch: fat_arch, byteOrder: ByteOrder) throws {
-            cpuType = CPUType(cpuType: arch.cputype)
-            cpuSubType = CPUSubType(cpu_subtype: arch.cpusubtype)
-
             switch byteOrder {
             case .little:
+                cpuType = CPUType(cpuType: arch.cputype.bigEndian)
+                cpuSubType = CPUSubType(cpu_subtype: arch.cpusubtype.bigEndian)
                 offset = arch.offset.bigEndian
                 size = arch.size.bigEndian
                 align = arch.align.bigEndian
             case .big:
+                cpuType = CPUType(cpuType: arch.cputype)
+                cpuSubType = CPUSubType(cpu_subtype: arch.cpusubtype)
                 offset = arch.offset
                 size = arch.size
                 align = arch.align
@@ -75,16 +76,17 @@ public extension Fat.Architecture {
         public let mach: Mach
 
         init(data: Data, arch: fat_arch_64, byteOrder: ByteOrder) throws {
-            cpuType = CPUType(cpuType: arch.cputype)
-            cpuSubType = CPUSubType(cpu_subtype: arch.cpusubtype)
-
             switch byteOrder {
             case .little:
+                cpuType = CPUType(cpuType: arch.cputype.bigEndian)
+                cpuSubType = CPUSubType(cpu_subtype: arch.cpusubtype.bigEndian)
                 offset = arch.offset.bigEndian
                 size = arch.size.bigEndian
                 align = arch.align.bigEndian
                 reserved = arch.reserved.bigEndian
             case .big:
+                cpuType = CPUType(cpuType: arch.cputype)
+                cpuSubType = CPUSubType(cpu_subtype: arch.cpusubtype)
                 offset = arch.offset
                 size = arch.size
                 align = arch.align
