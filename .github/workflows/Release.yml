@@ -1,0 +1,27 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*.*.*"
+
+jobs:
+  release:
+    runs-on: macos-12
+
+    steps:
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Build
+        run: swift build -c release MachOCLI
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            .build/release/MachOCLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
