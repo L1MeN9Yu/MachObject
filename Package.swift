@@ -9,13 +9,11 @@ let package = Package(
         .library(name: "MachOParser", targets: ["MachOParser"]),
         .library(name: "CodeSignParser", targets: ["CodeSignParser"]),
         .executable(name: "MachOCLI", targets: ["MachOCLI"]),
-        .executable(name: "IPAObfuscatory", targets: ["IPAObfuscatory"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "0.5.0"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.4"),
         .package(url: "https://github.com/L1MeN9Yu/Senna.git", from: "2.5.0"),
-        .package(url: "https://github.com/marmelroy/Zip.git", from: "2.1.2"),
     ],
     targets: [
         .target(name: "MachCore"),
@@ -56,13 +54,9 @@ let package = Package(
             .target(name: "MachLog"),
         ]),
         .target(name: "MachOCLI", dependencies: [
+            .target(name: "MachOParser"),
             .target(name: "MachOEditor"),
             .product(name: "ArgumentParser", package: "swift-argument-parser"),
-        ]),
-        .target(name: "IPAObfuscatory", dependencies: [
-            .target(name: "MachOEditor"),
-            .product(name: "ArgumentParser", package: "swift-argument-parser"),
-            .product(name: "Zip", package: "Zip"),
         ]),
         .testTarget(name: "MachOEditorTests", dependencies: ["MachOEditor"]),
         .testTarget(name: "MachOParserTests", dependencies: ["MachOParser"]),
