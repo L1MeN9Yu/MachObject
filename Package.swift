@@ -21,9 +21,6 @@ let package = Package(
             .product(name: "Logging", package: "swift-log"),
             .product(name: "Senna", package: "Senna"),
         ]),
-        .target(name: "Measure", dependencies: [
-            .target(name: "MachLog"),
-        ]),
         .target(name: "CodeSignParser", dependencies: [
             .target(name: "MachCore"),
         ]),
