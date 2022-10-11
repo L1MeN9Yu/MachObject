@@ -16,7 +16,6 @@ struct MachOCLI: ParsableCommand {
             StripFilePath.self,
             ReplaceString.self,
             NullifySymbolTable.self,
-            ObfuscateObjc.self,
         ],
         defaultSubcommand: Info.self
     )
