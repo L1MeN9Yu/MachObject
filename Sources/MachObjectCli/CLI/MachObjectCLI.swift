@@ -5,11 +5,15 @@
 import ArgumentParser
 import Foundation
 
-struct MachOCLI: ParsableCommand {
+struct MachObjectCLI {
+    static let version = "0.3.0"
+}
+
+extension MachObjectCLI: ParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "MachO CLI",
-        discussion: "The MachO Tool",
-        version: "0.0.1",
+        discussion: "The MachO Toolbox",
+        version: version,
         shouldDisplay: false,
         subcommands: [
             Info.self,
